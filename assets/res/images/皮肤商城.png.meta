@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "e464d082-6d53-4ed5-adde-ef88d5724419",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 111,
+  "height": 163,
+  "platformSettings": {},
   "subMetas": {
     "皮肤商城": {
       "ver": "1.0.4",

@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "d14789d8-fafd-461e-840e-3c135d3bf5e8",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 111,
+  "height": 163,
+  "platformSettings": {},
   "subMetas": {
     "fenxiang": {
       "ver": "1.0.4",

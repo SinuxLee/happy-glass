@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "347fa81c-55f5-451f-8697-c093e1cfb9af",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 43,
+  "height": 39,
+  "platformSettings": {},
   "subMetas": {
     "小电视@2x": {
       "ver": "1.0.4",

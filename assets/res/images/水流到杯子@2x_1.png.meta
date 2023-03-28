@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "62b1b89b-a441-4123-ba7c-8225d3c92e19",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 170,
+  "height": 191,
+  "platformSettings": {},
   "subMetas": {
     "水流到杯子@2x_1": {
       "ver": "1.0.4",

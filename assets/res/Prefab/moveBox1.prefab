@@ -70,6 +70,22 @@
       "__type__": "cc.Size",
       "width": 180,
       "height": 156
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   }
 ]

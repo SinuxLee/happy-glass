@@ -61,6 +61,22 @@
       "__type__": "cc.Size",
       "width": 134,
       "height": 134
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   },
   {
@@ -187,12 +203,32 @@
       "width": 134,
       "height": 134
     },
-    "_rotationX": 45,
-    "_rotationY": 45,
     "_quat": {
       "__type__": "cc.Quat",
       "z": -0.3826834323650898,
       "w": 0.9238795325112867
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": -45
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   },
   {

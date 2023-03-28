@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "df871d7e-db58-4049-9cb1-bbd7e4b40806",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 10,
+  "height": 20,
+  "platformSettings": {},
   "subMetas": {
     "灯泡发光": {
       "ver": "1.0.4",

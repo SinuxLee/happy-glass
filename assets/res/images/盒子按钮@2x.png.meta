@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "d563b00e-f03b-4758-bbf6-536787bc0516",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 91,
+  "height": 70,
+  "platformSettings": {},
   "subMetas": {
     "盒子按钮@2x": {
       "ver": "1.0.4",

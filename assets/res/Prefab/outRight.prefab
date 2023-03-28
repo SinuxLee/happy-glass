@@ -94,12 +94,32 @@
       "width": 103,
       "height": 98
     },
-    "_rotationX": 180,
-    "_rotationY": 180,
     "_quat": {
       "__type__": "cc.Quat",
       "z": -1,
       "w": 6.123233995736766e-17
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": -180
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   },
   {
@@ -133,10 +153,21 @@
       },
       "fileId": "5cDJlr1N9Dk6FmKyUe15t1"
     },
-    "_position": {
-      "__type__": "cc.Vec3",
-      "x": 68,
-      "y": -30
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        68,
+        -30,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   }
 ]

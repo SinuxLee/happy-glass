@@ -79,12 +79,32 @@
       "width": 132.5,
       "height": 265
     },
-    "_rotationX": -90,
-    "_rotationY": -90,
     "_quat": {
       "__type__": "cc.Quat",
       "z": 0.7071067811865475,
       "w": 0.7071067811865476
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 90
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   }
 ]

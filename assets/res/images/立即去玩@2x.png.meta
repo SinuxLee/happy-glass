@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "2a137eb6-ed28-4f40-b691-d76bcff1dcd5",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 111,
+  "height": 43,
+  "platformSettings": {},
   "subMetas": {
     "立即去玩@2x": {
       "ver": "1.0.4",

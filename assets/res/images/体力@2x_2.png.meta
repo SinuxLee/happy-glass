@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "ace1ae12-c817-4869-bc66-6e10e843d88a",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 158,
+  "height": 243,
+  "platformSettings": {},
   "subMetas": {
     "体力@2x_2": {
       "ver": "1.0.4",

@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "21489e46-cbbe-4789-a3dd-aae673a133df",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 320,
+  "height": 116,
+  "platformSettings": {},
   "subMetas": {
     "视频3倍领取@2x(1)": {
       "ver": "1.0.4",

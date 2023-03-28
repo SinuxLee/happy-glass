@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "83ce8f57-cb91-48c2-a067-0ddf32c5fdd0",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 566,
+  "height": 566,
+  "platformSettings": {},
   "subMetas": {
     "奖励物品2@2x": {
       "ver": "1.0.4",

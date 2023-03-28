@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "9633bded-096f-43d6-8425-b0e4bc911f78",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 28,
+  "height": 26,
+  "platformSettings": {},
   "subMetas": {
     "完成胜利的星星爆炸": {
       "ver": "1.0.4",

@@ -1,10 +1,15 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.4",
   "uuid": "b8ecef9f-e7ab-4b97-9a69-d89d84eba360",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 184,
+  "height": 114,
+  "platformSettings": {},
   "subMetas": {
     "表情没点中@2x": {
       "ver": "1.0.4",
