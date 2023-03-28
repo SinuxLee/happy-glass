@@ -1,13 +1,16 @@
 cc.Class({
   extends: cc.Component,
-  properties: {},
-  onLoad: function () {
-    const e = this.node
+
+  onLoad () {
+    const node = this.node
     const t = cc.find('Canvas/level')
-    this.node.on(cc.Node.EventType.TOUCH_MOVE, function (n) {
-      e.position = t.convertToNodeSpaceAR(n.getLocation()), e.children[0] && (e.children[0].position = cc.v2(0, 0))
-    }), this.node.on(cc.Node.EventType.TOUCH_CANCEL, function (t) {
-      e.destroy()
+    this.node.on(cc.Node.EventType.TOUCH_MOVE, (event) => {
+      node.position = t.convertToNodeSpaceAR(event.getLocation())
+      node.children[0] && (node.children[0].position = cc.v2(0, 0))
+    })
+
+    this.node.on(cc.Node.EventType.TOUCH_CANCEL, (t) => {
+      node.destroy()
     })
   }
 })

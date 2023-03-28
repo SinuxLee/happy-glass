@@ -1,53 +1,75 @@
-const a = require('LocalStorageData')
-const c = require('GameDataManager')
+const LocalStorageData = require('LocalStorageData')
+const GameDataManager = require('GameDataManager')
+
 cc.Class({
   extends: cc.Component,
-  properties: {},
-  onLoad: function () {
-    this.changeToDate(Date.now()) % 2 == 1 ? (cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active = !0, cc.find('Canvas/checkIn/矩形3@2x/金币@2x').active = !1) : (cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active = !1, cc.find('Canvas/checkIn/矩形3@2x/金币@2x').active = !0)
+
+  onLoad () {
+    const singleDay = this.changeToDate(Date.now()) % 2 == 1
+    cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active = singleDay
+    cc.find('Canvas/checkIn/矩形3@2x/金币@2x').active = !singleDay
   },
-  onRewardAdClose: function () {
-    const e = cc.find('Canvas/checkIn').getComponent('checkIn')
-    switch (e.rewardType) {
+
+  onRewardAdClose () {
+    const checkIn = cc.find('Canvas/checkIn').getComponent('checkIn')
+    switch (checkIn.rewardType) {
       case 1:
-        a.updateGold(150), wx.showToast({
+        LocalStorageData.updateGold(150)
+        wx.showToast({
           title: '成功领取150金币',
           icon: 'none',
           duration: 2e3
-        }), cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = a.get('gold'), e.close()
+        })
+        cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = LocalStorageData.get('gold')
+        checkIn.close()
         break
       case 2:
-        a.updateGold(300), wx.showToast({
+        LocalStorageData.updateGold(300)
+        wx.showToast({
           title: '成功领取300金币',
           icon: 'none',
           duration: 2e3
-        }), cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = a.get('gold'), e.close()
+        })
+        cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = LocalStorageData.get('gold')
+        checkIn.close()
         break
     }
-    cc.find('Canvas/checkIn/矩形3@2x/视频双倍领取@2x').getComponent(cc.Button).interactable = !1,
-    cc.find('Canvas/checkIn/矩形3@2x/领取@2x').getComponent(cc.Button).interactable = !1,
-    a.set('checkInDate', e.changeToDate(Date.now()))
+    cc.find('Canvas/checkIn/矩形3@2x/视频双倍领取@2x').getComponent(cc.Button).interactable = false,
+    cc.find('Canvas/checkIn/矩形3@2x/领取@2x').getComponent(cc.Button).interactable = false,
+    LocalStorageData.set('checkInDate', checkIn.changeToDate(Date.now()))
   },
-  changeToDate: function (e) {
-    return Math.floor(e / 864e5)
+
+  changeToDate (ts) {
+    return Math.floor(ts / 864e5)
   },
-  onRewardAdStop: function () {
-    cc.find('Canvas/checkIn').getComponent('checkIn'), wx.showToast({
+
+  onRewardAdStop () {
+    cc.find('Canvas/checkIn').getComponent('checkIn')
+    wx.showToast({
       title: '只有观看完整视频才能获得奖励哦',
       icon: 'none',
       duration: 2500
     })
   },
-  checkIn: function () {
-    cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active ? this.rewardType = 3 : this.rewardType = 1, this.onRewardAdClose()
+
+  checkIn () {
+    cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active ? this.rewardType = 3 : this.rewardType = 1
+    this.onRewardAdClose()
   },
-  doubleCheckIn: function () {
+
+  doubleCheckIn () {
     cc.find('Canvas/checkIn/矩形3@2x/体力拷贝7@2x').active ? this.rewardType = 4 : this.rewardType = 2
-    this.rewardType, c.setRewardCloseClass(this.onRewardAdClose), c.setRewardStopClass(this.onRewardAdStop)
+
+    GameDataManager.setRewardCloseClass(this.onRewardAdClose)
+    GameDataManager.setRewardStopClass(this.onRewardAdStop)
   },
-  close: function () {
-    cc.find('Canvas/checkIn/矩形3@2x').runAction(cc.sequence(cc.scaleTo(0.5, 0), cc.callFunc(function () {
-      this.node.active = !1
-    }, this)))
+
+  close () {
+    cc.find('Canvas/checkIn/矩形3@2x').runAction(
+      cc.sequence(
+        cc.scaleTo(0.5, 0),
+        cc.callFunc(() => this.node.active = false, this)
+      )
+    )
   }
 })

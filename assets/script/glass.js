@@ -1,5 +1,6 @@
-const a = require('WorldController')
-const o = require('LocalStorageData')
+const WorldController = require('WorldController')
+const LocalStorageData = require('LocalStorageData')
+
 cc.Class({
   extends: cc.Component,
   properties: {
@@ -53,10 +54,13 @@ cc.Class({
       type: cc.SpriteFrame
     }
   },
-  onLoad: function () {
-    this.waterNum = 0, this.glass = []
-    let e = o.get('selectGlass')
-    switch (a.tryItem && (e = a.tryNum), e) {
+
+  onLoad () {
+    this.waterNum = 0
+    this.glass = []
+    let num = LocalStorageData.get('selectGlass')
+    WorldController.tryItem && (num = WorldController.tryNum)
+    switch (num) {
       case 0:
         this.glass = this.glass1Atlas
         break
@@ -98,42 +102,44 @@ cc.Class({
     }
     this.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[0]
   },
-  onBeginContact: function (e, t, n) {
+
+  onBeginContact (e, t, n) {
     if (!(n.tag == 111 && t.tag == 666)) {
       return
     }
 
     t.node.getComponent('glass').waterNum++
-    e.disabled = !0
+    e.disabled = true
     n.tag = 0
 
-    this.waterNum >= a.winWaterNum / 2 && this.waterNum < a.winWaterNum && (t.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[1])
+    this.waterNum >= WorldController.winWaterNum / 2 && this.waterNum < WorldController.winWaterNum && (t.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[1])
 
-    if (!(this.waterNum >= a.winWaterNum && !a.win)) {
+    if (!(this.waterNum >= WorldController.winWaterNum && !WorldController.win)) {
       return
     }
 
     t.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[2]
-    a.win = !0
+    WorldController.win = true
     console.log('success')
 
     const gameover = cc.find('Canvas/gameOver')
-
     if (gameover && !gameover.active) {
       cc.find('Canvas/music').getComponent('musicManager').completeAudio()
       t.node.getComponent('glass').complete.resetSystem()
 
-      this.timeout = setTimeout(function () {
-        if (a.completeCount % 3 == 0) {
-          cc.find('Canvas/rollLayer').active = !0
+      this.timeout = setTimeout(() => {
+        if (WorldController.completeCount % 3 == 0) {
+          cc.find('Canvas/rollLayer').active = true
         } else {
-          cc.find('Canvas/tryItem').active = !0
-          a.completeCount++
+          cc.find('Canvas/tryItem').active = true
+          WorldController.completeCount++
         }
       }, 1e3)
     }
   },
-  onDestroy: function () {
-    this.unscheduleAllCallbacks(), clearTimeout(this.timeout)
+
+  onDestroy () {
+    this.unscheduleAllCallbacks()
+    clearTimeout(this.timeout)
   }
 })

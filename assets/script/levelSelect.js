@@ -1,23 +1,28 @@
-const a = require('WorldController')
+const WorldController = require('WorldController')
 cc.Class({
   extends: cc.Component,
   properties: {
     itemPrefab: cc.Prefab,
     content: cc.Node
   },
-  start: function () {
-    a.getLevelData(this.showItem, this)
+
+  start () {
+    WorldController.getLevelData(this.showItem, this)
   },
-  showItem: function (e, t) {
-    for (let n = 0; n < a.levelNum; n++) {
+
+  showItem (e, t) {
+    for (let n = 0; n < WorldController.levelNum; n++) {
       const o = cc.instantiate(t.itemPrefab)
-      o.getComponent('levelItem').init(n), o.parent = t.content
+      o.getComponent('levelItem').init(n)
+      o.parent = t.content
     }
   },
-  close: function () {
-    this.node.active = !1
+
+  close () {
+    this.node.active = false
   },
-  show: function () {
-    this.node.active = !0
+
+  show () {
+    this.node.active = true
   }
 })

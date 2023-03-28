@@ -1,28 +1,50 @@
-const a = require('userType')
-const o = require('LocalStorageData')
-const c = require('WorldController')
-let i = cc.color(0, 0, 0)
+const userType = require('userType')
+const LocalStorageData = require('LocalStorageData')
+const WorldController = require('WorldController')
+let color = cc.color(0, 0, 0)
+
 cc.Class({
   extends: cc.Component,
-  properties: {},
-  onLoad: function () {},
-  spawnWater: function () {
-    i = isNaN(o.get('selectWater')) ? a.waterColor[0] : a.waterColor[o.get('selectWater')]
-    c.tryWater && (i = a.tryWaterColor[c.tryWaterNum])
-    let e = 0
+
+  spawnWater () {
+    color = isNaN(LocalStorageData.get('selectWater')) ? userType.waterColor[0] : userType.waterColor[LocalStorageData.get('selectWater')]
+    WorldController.tryWater && (color = userType.tryWaterColor[WorldController.tryWaterNum])
+
+    let counter = 0
     let t = 0
     this.node.parent.rotation == 90 ? t = 1 : this.node.parent.rotation == 180 && (t = 2),
-    this.schedule(function () {
-      const n = new cc.Node('water' + e++)
-      n.position = cc.v2(0, 0 + 50 * Math.random(0, 1)), n.group = 'water'
-      const a = n.addComponent(cc.RigidBody)
-      const o = n.addComponent(cc.PhysicsCircleCollider)
-      o.radius = 12, o.tag = 111, o.friction = 0, a.gravityScale = 3.5, a.type = cc.RigidBodyType.Dynamic, t == 1 ? (a.linearVelocity.y = -300, a.linearDamping = 1) : t == 2 ? (a.linearVelocity.x = -300, a.linearDamping = 1) : (a.linearVelocity.x = 300, a.linearDamping = 1), a.enabledContactListener = !0, n.parent = this.node
-    }, 0.05, 36), this.schedule(function () {
+    this.schedule(() => {
+      const nodeWater = new cc.Node('water' + counter++)
+      nodeWater.position = cc.v2(0, 0 + 50 * Math.random(0, 1))
+      nodeWater.group = 'water'
+
+      const body = nodeWater.addComponent(cc.RigidBody)
+      const collider = nodeWater.addComponent(cc.PhysicsCircleCollider)
+      collider.radius = 12
+      collider.tag = 111
+      collider.friction = 0
+      body.gravityScale = 3.5
+      body.type = cc.RigidBodyType.Dynamic
+      if (t == 1) {
+        body.linearVelocity.y = -300
+        body.linearDamping = 1
+      } else if (t == 2) {
+        body.linearVelocity.x = -300
+        body.linearDamping = 1
+      } else {
+        body.linearVelocity.x = 300
+        body.linearDamping = 1
+      }
+      body.enabledContactListener = true
+      nodeWater.parent = this.node
+    }, 0.05, 36)
+
+    this.schedule(() => {
       cc.find('Canvas/music').getComponent('musicManager').waterAudio()
     }, 0.2, 9)
   },
-  metaball: function (e, t, n, a) {
+
+  metaball (e, t, n, a) {
     const o = arguments.length > 4 && void 0 !== arguments[4] ? arguments[4] : 2.4
     const c = Math.PI / 2
     const i = n.sub(a).mag()
@@ -58,27 +80,54 @@ cc.Class({
       con4: this.getVector(f, u - c, R)
     }
   },
-  getVector: function (e, t, n) {
+
+  getVector (e, t, n) {
     const a = n * Math.cos(t)
     const o = n * Math.sin(t)
     return cc.v2(e.x + a, e.y + o)
   },
-  update: function (e) {
-    const t = this.node.getComponent(cc.Graphics)
-    this.balls = this.node.children, t.clear(), t.fillColor = i
+
+  update (e) {
+    const gl = this.node.getComponent(cc.Graphics)
+    this.balls = this.node.children
+    gl.clear()
+    gl.fillColor = color
+
     for (let n = 0; n < this.balls.length; n++) {
-      const a = this.balls[n]
-      const o = a.position
-      const c = 1.3 * a.getComponent('cc.PhysicsCircleCollider').radius
-      t.circle(o.x, o.y, c), t.fill()
+      const ball = this.balls[n]
+      const pos = ball.position
+      const radius = 1.3 * ball.getComponent(cc.PhysicsCircleCollider).radius
+      gl.circle(pos.x, pos.y, radius)
+      gl.fill()
+
       for (let s = n; s < this.balls.length; s++) {
-        if (n !== s) {
-          const r = this.balls[s]
-          const d = r.position
-          const l = 1.2 * r.getComponent('cc.PhysicsCircleCollider').radius
-          let h = null;
-          (h = o.y < d.y ? this.metaball(c, l, o, d) : this.metaball(l, c, d, o)) && (t.moveTo(h.pos1.x, h.pos1.y), t.bezierCurveTo(h.con1.x, h.con1.y, h.con3.x, h.con3.y, h.pos3.x, h.pos3.y), t.lineTo(h.pos4.x, h.pos4.y), t.bezierCurveTo(h.con4.x, h.con4.y, h.con2.x, h.con2.y, h.pos2.x, h.pos2.y), t.lineTo(h.pos1.x, h.pos1.y), t.fill())
-        }
+        if (n === s) continue
+
+        const otherBall = this.balls[s]
+        const otherPos = otherBall.position
+        const otherRadius = 1.2 * otherBall.getComponent(cc.PhysicsCircleCollider).radius
+
+        let metaball = null
+        if (pos.y < otherPos.y) metaball = this.metaball(radius, otherRadius, pos, otherPos)
+        else metaball = this.metaball(otherRadius, radius, otherPos, pos)
+        if (metaball == null) continue
+
+        gl.moveTo(metaball.pos1.x, metaball.pos1.y)
+        gl.bezierCurveTo(
+          metaball.con1.x, metaball.con1.y,
+          metaball.con3.x, metaball.con3.y,
+          metaball.pos3.x, metaball.pos3.y
+        )
+
+        gl.lineTo(metaball.pos4.x, metaball.pos4.y)
+        gl.bezierCurveTo(
+          metaball.con4.x, metaball.con4.y,
+          metaball.con2.x, metaball.con2.y,
+          metaball.pos2.x, metaball.pos2.y
+        )
+
+        gl.lineTo(metaball.pos1.x, metaball.pos1.y)
+        gl.fill()
       }
     }
   }

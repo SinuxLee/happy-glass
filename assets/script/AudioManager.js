@@ -1,56 +1,73 @@
+const GameDataManager = require('GameDataManager')
 
-const x = require('GameDataManager')
-module.exports = {
-  bgm: null,
-  audioResArray: [],
-  preloadAudio: function (e) {
-    const b = this
-    cc.loader.loadResDir(e, cc.AudioClip, function (e, _) {
-      e ? console.error('资源加载错误') : b.audioResArray = _
-    }), cc.audioEngine.setMusicVolume(0.3)
-  },
-  getAudioClipByName: function (e) {
-    for (let b = 0; b < this.audioResArray.length; b++) { if (this.audioResArray[b]._name == e) return this.audioResArray[b] }
+class AudioManager {
+  bgm = null
+  audioResArray = []
+
+  preloadAudio (path) {
+    cc.loader.loadResDir(path, cc.AudioClip, (err, res) => {
+      if (err) return cc.error(err.message || err)
+      this.audioResArray = res
+    })
+
+    cc.audioEngine.setMusicVolume(0.3)
+  }
+
+  getAudioClipByName (name) {
+    for (let i = 0; i < this.audioResArray.length; i++) {
+      if (this.audioResArray[i]._name == name) return this.audioResArray[i]
+    }
     return null
-  },
-  playEffect: function (e) {
-    const b = arguments.length > 1 && void 0 !== arguments[1] && arguments[1]
-    if (x.sound) {
-      const _ = this.getAudioClipByName(e)
-      cc.audioEngine.playEffect(_, b)
-    }
-  },
-  stopAllEffect: function () {
+  }
+
+  playEffect (name, isLoop = false) {
+    if (!GameDataManager.sound) return
+
+    const audioClip = this.getAudioClipByName(name)
+    cc.audioEngine.playEffect(audioClip, isLoop)
+  }
+
+  stopAllEffect () {
     cc.audioEngine.stopAllEffects()
-  },
-  playButtonClickEffect: function () {
+  }
+
+  playButtonClickEffect () {
     this.playEffect('click')
-  },
-  stopAllAudios: function () {
+  }
+
+  stopAllAudios () {
     cc.audioEngine.stopAll()
-  },
-  pauseAllAudios: function () {
+  }
+
+  pauseAllAudios () {
     cc.audioEngine.pauseAll()
-  },
-  resumeAllAudio: function () {
+  }
+
+  resumeAllAudio () {
     cc.audioEngine.resumeAll()
-  },
-  playBGM: function (e) {
-    const b = !(arguments.length > 1 && void 0 !== arguments[1]) || arguments[1]
-    if ((this.bgm != e || !cc.audioEngine.isMusicPlaying()) && (this.bgm = e,
-    x.music)) {
-      this.stopBGM()
-      const _ = this.getAudioClipByName(e)
-      cc.audioEngine.playMusic(_, b)
-    }
-  },
-  pauseBGM: function () {
+  }
+
+  playBGM (name, isLoop = true) {
+    if (this.bgm == name && cc.audioEngine.isMusicPlaying()) return
+    this.bgm = name
+    if (!GameDataManager.music) return
+
     this.stopBGM()
-  },
-  resumeBGM: function () {
+    const audioClip = this.getAudioClipByName(name)
+    cc.audioEngine.playMusic(audioClip, isLoop)
+  }
+
+  pauseBGM () {
+    this.stopBGM()
+  }
+
+  resumeBGM () {
     this.bgm && this.playBGM(this.bgm)
-  },
-  stopBGM: function () {
+  }
+
+  stopBGM () {
     cc.audioEngine.stopMusic()
   }
 }
+
+module.exports = new AudioManager()

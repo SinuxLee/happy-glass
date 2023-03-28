@@ -1,42 +1,49 @@
-const a = require('WorldController')
+const WorldController = require('WorldController')
+
 cc.Class({
   extends: cc.Component,
-  properties: {
+
+  onEnable () {
+    WorldController.begin = false
+    WorldController.tryItem = false
+    WorldController.tryWater = false
+    WorldController.playNum++
+    WorldController.playNum % 3 == 0
   },
-  onLoad: function () {
-  },
-  onEnable: function () {
-    a.begin = !1, a.tryItem = !1, a.tryWater = !1, a.playNum++, a.playNum % 3 == 0
-  },
-  onRewardAdClose: function () {
+
+  onRewardAdClose () {
     const e = cc.find('Canvas/gameOver').getComponent('gameOver')
   },
-  onRewardAdStop: function () {
+
+  onRewardAdStop () {
     wx.showToast({
       title: '只有观看完整视频才能获得奖励哦',
       icon: 'none',
       duration: 2500
     })
   },
-  shareBtn: function () {
+
+  restartBtn () {
+    WorldController.waterIsSpawn = false
+    WorldController.win = false
+    this.restart()
   },
-  restartBtn: function () {
-    a.waterIsSpawn = !1, a.win = !1
-    this.restart(e)
-  },
-  restart: function (e) {
+
+  restart () {
     cc.director.loadScene('GameScene')
   },
-  backBtn: function () {
-    a.waterIsSpawn = !1, a.win = !1, cc.director.loadScene('MenuScene')
+
+  backBtn () {
+    WorldController.waterIsSpawn = false
+    WorldController.win = false
+    cc.director.loadScene('MenuScene')
   },
-  changeTime: function (e) {
+
+  changeTime (e) {
     let t = ''
     const n = Math.floor(e / 60)
     t = n < 10 ? '0' + n : n
     const a = e % 60
     return t = a < 10 ? t + ':0' + a : t + ':' + a
-  },
-  update: function () {
   }
 })

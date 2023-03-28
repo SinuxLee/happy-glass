@@ -26,25 +26,32 @@ cc.Class({
       default: null
     }
   },
-  waterAudio: function () {
-    cc.audioEngine.play(this.water, !1, 0.5)
+
+  waterAudio () {
+    cc.audioEngine.play(this.water, false, 0.5)
   },
-  winAudio: function () {
-    cc.audioEngine.play(this.win, !1, 0.5)
+
+  winAudio () {
+    cc.audioEngine.play(this.win, false, 0.5)
   },
-  loseAudio: function () {
-    cc.audioEngine.play(this.lose, !1, 0.5)
+
+  loseAudio () {
+    cc.audioEngine.play(this.lose, false, 0.5)
   },
-  completeAudio: function () {
-    cc.audioEngine.play(this.complete, !1, 0.5)
+
+  completeAudio () {
+    cc.audioEngine.play(this.complete, false, 0.5)
   },
-  buttonAudio: function () {
-    cc.audioEngine.play(this.button, !1, 0.5)
+
+  buttonAudio () {
+    cc.audioEngine.play(this.button, false, 0.5)
   },
-  penAudio: function () {
-    this.penEffect && cc.audioEngine.getState(this.penEffect) != -1 || (this.penEffect = cc.audioEngine.play(this.pen, !1, 0.5))
+
+  penAudio () {
+    this.penEffect && cc.audioEngine.getState(this.penEffect) != -1 || (this.penEffect = cc.audioEngine.play(this.pen, false, 0.5))
   },
-  stopPenAudio: function () {
+
+  stopPenAudio () {
     cc.audioEngine.stop(this.penEffect)
   }
 })

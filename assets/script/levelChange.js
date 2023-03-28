@@ -1,6 +1,3 @@
-require('LocalStorageData')
-require('WorldController')
-
 cc.Class({
   extends: cc.Component,
   properties: {
@@ -10,15 +7,21 @@ cc.Class({
     starNode: cc.Node,
     lock: cc.Node
   },
-  init: function (e) {
-    this.lock.active = !1, this.levelNum.string = e + 1, this.node.on(cc.Node.EventType.TOUCH_END, function () {
-      this.lock.active
-        ? wx.showToast && wx.showToast({
+
+  init (level) {
+    this.lock.active = false
+    this.levelNum.string = level + 1
+    this.node.on(cc.Node.EventType.TOUCH_END, () => {
+      if (this.lock.active) {
+        wx.showToast && wx.showToast({
           title: '关卡未解锁',
           icon: 'none',
           duration: 2e3
         })
-        : (cc.find('Canvas/level').getComponent('test').levelChange(e), cc.find('Canvas/levelSelect').getComponent('levelSelect').close())
-    }, this)
+      } else {
+        cc.find('Canvas/level').getComponent('test').levelChange(level)
+        cc.find('Canvas/levelSelect').getComponent('levelSelect').close()
+      }
+    })
   }
 })

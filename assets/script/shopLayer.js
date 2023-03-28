@@ -1,4 +1,4 @@
-require('LocalStorageData'), cc.Class({
+cc.Class({
   extends: cc.Component,
   properties: {
     waterLayer: cc.Node,
@@ -16,18 +16,45 @@ require('LocalStorageData'), cc.Class({
     usingSprite: cc.SpriteFrame,
     havedSprite: cc.SpriteFrame
   },
-  onLoad: function () {
-    for (let e = 0; e < this.waterLayer.children[0].children.length; e++) this.waterLayer.children[0].children[e].addComponent('shopItem').init(e, 1, this.usingSprite, this.havedSprite)
-    for (let t = 0; t < this.glassLayer.children[0].children.length; t++) this.glassLayer.children[0].children[t].addComponent('shopItem').init(t, 2, this.usingSprite, this.havedSprite)
-    for (let n = 0; n < this.penLayer.children[0].children.length; n++) this.penLayer.children[0].children[n].addComponent('shopItem').init(n, 3, this.usingSprite, this.havedSprite)
+
+  onLoad () {
+    for (let e = 0; e < this.waterLayer.children[0].children.length; e++) {
+      this.waterLayer.children[0].children[e].addComponent('shopItem').init(e, 1, this.usingSprite, this.havedSprite)
+    }
+
+    for (let t = 0; t < this.glassLayer.children[0].children.length; t++) {
+      this.glassLayer.children[0].children[t].addComponent('shopItem').init(t, 2, this.usingSprite, this.havedSprite)
+    }
+
+    for (let n = 0; n < this.penLayer.children[0].children.length; n++) {
+      this.penLayer.children[0].children[n].addComponent('shopItem').init(n, 3, this.usingSprite, this.havedSprite)
+    }
   },
-  waterBtnEvent: function () {
-    this.waterLayer.active = !0, this.glassLayer.active = !1, this.penLayer.active = !1, this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterSelect, this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassNo, this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penNo
+
+  waterBtnEvent () {
+    this.waterLayer.active = true
+    this.glassLayer.active = false
+    this.penLayer.active = false
+    this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterSelect
+    this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassNo
+    this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penNo
   },
-  glassBtnEvent: function () {
-    this.waterLayer.active = !1, this.glassLayer.active = !0, this.penLayer.active = !1, this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterNo, this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassSelect, this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penNo
+
+  glassBtnEvent () {
+    this.waterLayer.active = false
+    this.glassLayer.active = true
+    this.penLayer.active = false
+    this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterNo
+    this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassSelect
+    this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penNo
   },
-  penBtnEvent: function () {
-    this.waterLayer.active = !1, this.glassLayer.active = !1, this.penLayer.active = !0, this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterNo, this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassNo, this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penSelect
+
+  penBtnEvent () {
+    this.waterLayer.active = false
+    this.glassLayer.active = false
+    this.penLayer.active = true
+    this.waterBtn.getComponent(cc.Sprite).spriteFrame = this.waterNo
+    this.glassBtn.getComponent(cc.Sprite).spriteFrame = this.glassNo
+    this.penBtn.getComponent(cc.Sprite).spriteFrame = this.penSelect
   }
 })

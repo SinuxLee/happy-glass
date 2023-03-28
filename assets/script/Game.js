@@ -1,7 +1,8 @@
-const t = require('AudioManager')
-const i = require('GameDataManager')
-const n = require('LocalStorageData')
-const r = require('WorldController')
+const AudioManager = require('AudioManager')
+const GameDataManager = require('GameDataManager')
+const LocalStorageData = require('LocalStorageData')
+const WorldController = require('WorldController')
+
 cc.Class({
   extends: cc.Component,
   properties: {
@@ -14,61 +15,74 @@ cc.Class({
     shopBtn: cc.Node,
     levelData: cc.JsonAsset
   },
-  onLoad: function () {
-    r.setLevelData(this.levelData.json)
+
+  onLoad () {
+    WorldController.setLevelData(this.levelData.json)
   },
-  onRewardAdClose: function () {
+
+  onRewardAdClose () {
     const e = cc.find('Canvas').getComponent('Game')
-    const _ = n.get('gold')
-    n.set('gold', _ + 50),
-    e.goldLabel.string = n.get('gold'),
-    e.shopGoldLabel.string = n.get('gold')
+    const _ = LocalStorageData.get('gold')
+    LocalStorageData.set('gold', _ + 50),
+    e.goldLabel.string = LocalStorageData.get('gold'),
+    e.shopGoldLabel.string = LocalStorageData.get('gold')
   },
-  onRewardAdStop: function () {
+
+  onRewardAdStop () {
     wx.showToast({
       title: '只有观看完整视频才能获得奖励哦',
       icon: 'none',
       duration: 2500
     })
   },
-  start: function () {
+
+  start () {
     cc.director.preloadScene('GameScene')
-    if (isNaN(n.get('gold')) ? (this.goldLabel.string = 0, n.set('gold', 0)) : this.goldLabel.string = n.get('gold'),
-    isNaN(n.get('gold'))
+    if (isNaN(LocalStorageData.get('gold')) ? (this.goldLabel.string = 0, LocalStorageData.set('gold', 0)) : this.goldLabel.string = LocalStorageData.get('gold'),
+    isNaN(LocalStorageData.get('gold'))
       ? (this.shopGoldLabel.string = 0,
-        n.set('gold', 0))
-      : this.shopGoldLabel.string = n.get('gold'),
-    isNaN(n.get('levelNum'))) {
+        LocalStorageData.set('gold', 0))
+      : this.shopGoldLabel.string = LocalStorageData.get('gold'),
+    isNaN(LocalStorageData.get('levelNum'))) {
       this.levelNum.string = '第1关',
-      n.set('levelNum', 0)
+      LocalStorageData.set('levelNum', 0)
     } else {
-      const e = n.get('levelNum') + 1
+      const e = LocalStorageData.get('levelNum') + 1
       this.levelNum.string = '第' + e + '关'
     }
-    console.log('date', this.changeToDate(Date.now()) > n.get('checkInDate')),
-    isNaN(n.get('checkInDate')) ? cc.find('Canvas/checkIn').active = !0 : this.changeToDate(Date.now()) > n.get('checkInDate') && (cc.find('Canvas/checkIn').active = !0)
+    console.log('date', this.changeToDate(Date.now()) > LocalStorageData.get('checkInDate')),
+    isNaN(LocalStorageData.get('checkInDate')) ? cc.find('Canvas/checkIn').active = true : this.changeToDate(Date.now()) > LocalStorageData.get('checkInDate') && (cc.find('Canvas/checkIn').active = true)
   },
-  changeToDate: function (e) {
+
+  changeToDate (e) {
     return Math.floor(e / 864e5)
   },
-  showGameBox: function (e) {},
-  setBlockInputEvents: function (e) {
+
+  showGameBox (e) {},
+
+  setBlockInputEvents (e) {
     this.maskLayer.active = e
   },
-  inviteClicked: function (e) {
-    this.inviteDialog.active = !0, this.setBlockInputEvents(!0), t.playButtonClickEffect()
+
+  inviteClicked (e) {
+    this.inviteDialog.active = true
+    this.setBlockInputEvents(true)
+    AudioManager.playButtonClickEffect()
   },
-  closeClicked: function (e) {
-    e.currentTarget.parent.active = !1, this.setBlockInputEvents(!1)
+  closeClicked (e) {
+    e.currentTarget.parent.active = false
+    this.setBlockInputEvents(false)
   },
-  cleanInviteData: function () {
+
+  cleanInviteData () {
 
   },
-  startBtn: function () {
+
+  startBtn () {
     if (!this.click) {
-      this.click = !0
-      r.getcurrentLevel()
-      if (r.currentLevel >= r.levelNum) {
+      this.click = true
+      WorldController.getcurrentLevel()
+      if (WorldController.currentLevel >= WorldController.levelNum) {
         return wx.showToast({
           title: '敬请期待后续关卡！',
           icon: 'none',
@@ -76,60 +90,67 @@ cc.Class({
         })
       }
 
-      this.click = !1
+      this.click = false
       this.startGame()
     }
   },
-  startGame: function () {
-    this.click = !1
+
+  startGame () {
+    this.click = false
     cc.director.loadScene('GameScene')
   },
 
-  goldAddBtn: function () {
+  goldAddBtn () {
     this.rewardType = 0
-    const e = this
     wx.showModal({
       title: '提示',
       content: '是否观看视频获取金币？',
-      success: function (b) {
+      success: (b) => {
         b.confirm
-          ? (console.log('用户点击确定'), i.setRewardCloseClass(e.onRewardAdClose),
-            i.setRewardStopClass(e.onRewardAdStop))
+          ? (console.log('用户点击确定'), GameDataManager.setRewardCloseClass(this.onRewardAdClose),
+            GameDataManager.setRewardStopClass(this.onRewardAdStop))
           : b.cancel && console.log('用户点击取消')
       }
     })
   },
-  openRank: function () {
+
+  openRank () {
   },
-  closeRank: function () {
+
+  closeRank () {
   },
-  openShop: function () {
-    this.shopLayer.active = !0
+
+  openShop () {
+    this.shopLayer.active = true
   },
-  closeShop: function () {
-    this.shopLayer.active = !1
+
+  closeShop () {
+    this.shopLayer.active = false
   },
-  selectBtn: function () {
-    this.levelSelect.active = !0
+
+  selectBtn () {
+    this.levelSelect.active = true
   },
-  shareBtn: function () {
+
+  shareBtn () {
   },
-  shareEvent: function () {
+
+  shareEvent () {
   },
-  updateShopGold: function () {
-    isNaN(n.get('gold'))
-      ? (this.shopGoldLabel.string = 0, this.goldLabel.string = n.get('gold'),
-        n.set('gold', 0))
-      : (this.shopGoldLabel.string = n.get('gold'),
-        this.goldLabel.string = n.get('gold'))
+
+  updateShopGold () {
+    isNaN(LocalStorageData.get('gold'))
+      ? (this.shopGoldLabel.string = 0, this.goldLabel.string = LocalStorageData.get('gold'),
+        LocalStorageData.set('gold', 0))
+      : (this.shopGoldLabel.string = LocalStorageData.get('gold'),
+        this.goldLabel.string = LocalStorageData.get('gold'))
   },
-  changeTime: function (e) {
+
+  changeTime (e) {
     let b = ''
     const _ = Math.floor(e / 60)
     b = _ < 10 ? '0' + _ : _
     const x = e % 60
     return x < 10 ? b + ':0' + x : b + ':' + x
-  },
-  update: function () {
   }
 })
