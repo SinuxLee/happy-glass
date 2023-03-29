@@ -1,20 +1,25 @@
 module.exports = {
   timer: -1,
 
-  initItem (e) {
-    let b
+  initItem (data) {
     wx.getStorage({
-      key: e.str,
-      success: function (_) {
-        console.log(_.data), (b = parseInt(_.data)) != null && b.length != 0 && !isNaN(b) || wx.setStorage({
-          key: e.str,
-          data: JSON.stringify(e.number)
+      key: data.str,
+      success: (ret) => {
+        console.log(ret.data)
+        const b = parseInt(ret.data)
+        if(b != null && b.length != 0 && !isNaN(b)) return
+
+        wx.setStorage({
+          key: data.str,
+          data: JSON.stringify(data.number)
         })
       },
-      fail: function (b) {
-        console.log(b), wx.setStorage({
-          key: e.str,
-          data: JSON.stringify(e.number),
+      
+      fail: (err) => {
+        console.log(err)
+        wx.setStorage({
+          key: data.str,
+          data: JSON.stringify(data.number),
           success: function () { }
         })
       }

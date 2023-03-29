@@ -21,11 +21,13 @@ cc.Class({
   },
 
   onRewardAdClose () {
-    const e = cc.find('Canvas').getComponent('Game')
-    const _ = LocalStorageData.get('gold')
-    LocalStorageData.set('gold', _ + 50),
-    e.goldLabel.string = LocalStorageData.get('gold'),
-    e.shopGoldLabel.string = LocalStorageData.get('gold')
+    const game = cc.find('Canvas').getComponent('Game')
+    let gold = LocalStorageData.get('gold')
+    gold += 50
+
+    LocalStorageData.set('gold', gold)
+    game.goldLabel.string = gold.toString()
+    game.shopGoldLabel.string = gold.toString()
   },
 
   onRewardAdStop () {
@@ -38,19 +40,30 @@ cc.Class({
 
   start () {
     cc.director.preloadScene('GameScene')
-    if (isNaN(LocalStorageData.get('gold')) ? (this.goldLabel.string = 0, LocalStorageData.set('gold', 0)) : this.goldLabel.string = LocalStorageData.get('gold'),
-    isNaN(LocalStorageData.get('gold'))
-      ? (this.shopGoldLabel.string = 0,
-        LocalStorageData.set('gold', 0))
-      : this.shopGoldLabel.string = LocalStorageData.get('gold'),
-    isNaN(LocalStorageData.get('levelNum'))) {
+
+    if (isNaN(LocalStorageData.get('gold'))) {
+      this.goldLabel.string = 0
+      LocalStorageData.set('gold', 0)
+    } else {
+      this.goldLabel.string = LocalStorageData.get('gold')
+    }
+
+    if (isNaN(LocalStorageData.get('gold'))) {
+      this.shopGoldLabel.string = 0
+      LocalStorageData.set('gold', 0)
+    } else {
+      this.shopGoldLabel.string = LocalStorageData.get('gold')
+    }
+
+    let lv = LocalStorageData.get('levelNum')
+    if (isNaN(lv)) {
       this.levelNum.string = '第1关',
       LocalStorageData.set('levelNum', 0)
     } else {
-      const e = LocalStorageData.get('levelNum') + 1
-      this.levelNum.string = '第' + e + '关'
+      this.levelNum.string = `第${lv + 1}关`
     }
-    console.log('date', this.changeToDate(Date.now()) > LocalStorageData.get('checkInDate')),
+
+    console.log('date', this.changeToDate(Date.now()) > LocalStorageData.get('checkInDate'))
     isNaN(LocalStorageData.get('checkInDate')) ? cc.find('Canvas/checkIn').active = true : this.changeToDate(Date.now()) > LocalStorageData.get('checkInDate') && (cc.find('Canvas/checkIn').active = true)
   },
 
@@ -58,7 +71,7 @@ cc.Class({
     return Math.floor(e / 864e5)
   },
 
-  showGameBox (e) {},
+  showGameBox (e) { },
 
   setBlockInputEvents (e) {
     this.maskLayer.active = e
@@ -69,6 +82,7 @@ cc.Class({
     this.setBlockInputEvents(true)
     AudioManager.playButtonClickEffect()
   },
+
   closeClicked (e) {
     e.currentTarget.parent.active = false
     this.setBlockInputEvents(false)
@@ -106,10 +120,13 @@ cc.Class({
       title: '提示',
       content: '是否观看视频获取金币？',
       success: (b) => {
-        b.confirm
-          ? (console.log('用户点击确定'), GameDataManager.setRewardCloseClass(this.onRewardAdClose),
-            GameDataManager.setRewardStopClass(this.onRewardAdStop))
-          : b.cancel && console.log('用户点击取消')
+        if (b.confirm) {
+          console.log('用户点击确定')
+          GameDataManager.setRewardCloseClass(this.onRewardAdClose)
+          GameDataManager.setRewardStopClass(this.onRewardAdStop)
+        } else {
+          b.cancel && console.log('用户点击取消')
+        }
       }
     })
   },

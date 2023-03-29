@@ -15,7 +15,7 @@ class AudioManager {
 
   getAudioClipByName (name) {
     for (let i = 0; i < this.audioResArray.length; i++) {
-      if (this.audioResArray[i]._name == name) return this.audioResArray[i]
+      if (this.audioResArray[i].name === name) return this.audioResArray[i]
     }
     return null
   }
@@ -48,7 +48,7 @@ class AudioManager {
   }
 
   playBGM (name, isLoop = true) {
-    if (this.bgm == name && cc.audioEngine.isMusicPlaying()) return
+    if (this.bgm === name && cc.audioEngine.isMusicPlaying()) return
     this.bgm = name
     if (!GameDataManager.music) return
 

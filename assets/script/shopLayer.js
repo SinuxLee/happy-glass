@@ -18,16 +18,16 @@ cc.Class({
   },
 
   onLoad () {
-    for (let e = 0; e < this.waterLayer.children[0].children.length; e++) {
-      this.waterLayer.children[0].children[e].addComponent('shopItem').init(e, 1, this.usingSprite, this.havedSprite)
+    for (let idx = 0; idx < this.waterLayer.children[0].children.length; idx++) {
+      this.waterLayer.children[0].children[idx].addComponent('shopItem').init(idx, 1, this.usingSprite, this.havedSprite)
     }
 
-    for (let t = 0; t < this.glassLayer.children[0].children.length; t++) {
-      this.glassLayer.children[0].children[t].addComponent('shopItem').init(t, 2, this.usingSprite, this.havedSprite)
+    for (let idx = 0; idx < this.glassLayer.children[0].children.length; idx++) {
+      this.glassLayer.children[0].children[idx].addComponent('shopItem').init(idx, 2, this.usingSprite, this.havedSprite)
     }
 
-    for (let n = 0; n < this.penLayer.children[0].children.length; n++) {
-      this.penLayer.children[0].children[n].addComponent('shopItem').init(n, 3, this.usingSprite, this.havedSprite)
+    for (let idx = 0; idx < this.penLayer.children[0].children.length; idx++) {
+      this.penLayer.children[0].children[idx].addComponent('shopItem').init(idx, 3, this.usingSprite, this.havedSprite)
     }
   },
 

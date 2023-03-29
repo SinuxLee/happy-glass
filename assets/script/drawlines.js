@@ -90,7 +90,19 @@ cc.Class({
       if (g === event.getID()) {
         l = event.getLocation()
         d = this.node.convertToNodeSpaceAR(l)
-        if (s <= 0) return (C = this.node.getChildByName('line' + p)).getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic, C.getComponent(cc.RigidBody).gravityScale = 3.5, C.group = 'line', void (WorldController.waterIsSpawn || (WorldController.waterIsSpawn = true, WorldController.frames = cc.director.getTotalFrames(), WorldController.begin = true, this.getWaterNode().getComponent('water').spawnWater()))
+        if (s <= 0) {
+          const lineNode = this.node.getChildByName('line' + p)
+          lineNode.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+          lineNode.getComponent(cc.RigidBody).gravityScale = 3.5
+          lineNode.group = 'line'
+          if (WorldController.waterIsSpawn) return
+
+          WorldController.waterIsSpawn = true
+          WorldController.frames = cc.director.getTotalFrames()
+          WorldController.begin = true
+          this.getWaterNode().getComponent('water').spawnWater()
+          return
+        }
 
         b = this.testrect(l.x, l.y)
         this.wideRaycast(v.x, v.y, l.x, l.y)

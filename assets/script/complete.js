@@ -47,31 +47,62 @@ cc.Class({
     const penWidth = cc.find('Canvas/UILayer/pen/lineLength').width
     const action = cc.callFunc(this.shake, this)
 
-    penWidth > this.star2.x + 120
-      ? (this.starsNode.children[1].children[1].active = false, this.starsNode.children[2].children[1].active = false, setTimeout(function () {
-          this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action)), setTimeout(function () {
-            this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem(), this.starsNode.children[1].children[1].active = true, this.starsNode.children[1].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
-          }, 300), setTimeout(() => {
-            this.starsNode.children[1].children[0].getComponent(cc.ParticleSystem).resetSystem()
-            this.starsNode.children[2].children[1].active = true
-            this.starsNode.children[2].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
-          }, 600), setTimeout(() => {
-            this.starsNode.children[2].children[0].getComponent(cc.ParticleSystem).resetSystem()
-          }, 900)
-        }, 500), this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 3, this.goldShow))
-      : penWidth > this.star1.x + 120
-        ? (this.starsNode.children[2].children[1].active = false, this.starsNode.children[2].children[0].active = false, this.starsNode.children[1].children[1].active = false, setTimeout(function () {
-            this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action)), setTimeout(function () {
-              this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem(), this.starsNode.children[1].children[1].active = true, this.starsNode.children[1].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
-            }, 300), setTimeout(function () {
-              this.starsNode.children[1].children[0].getComponent(cc.ParticleSystem).resetSystem()
-            }, 600)
-          }, 500), this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 2, this.goldShow))
-        : (this.starsNode.children[1].children[1].active = false, this.starsNode.children[2].children[1].active = false, this.starsNode.children[1].children[0].active = false, this.starsNode.children[2].children[0].active = false, setTimeout(function () {
-            this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action)), setTimeout(function () {
-              this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem()
-            }, 300)
-          }, 500), this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 1, this.goldShow))
+    if (penWidth > this.star2.x + 120) {
+      this.starsNode.children[1].children[1].active = false
+      this.starsNode.children[2].children[1].active = false
+      setTimeout(() => {
+        this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+
+        setTimeout(() => {
+          this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem()
+          this.starsNode.children[1].children[1].active = true
+          this.starsNode.children[1].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+        }, 300)
+
+        setTimeout(() => {
+          this.starsNode.children[1].children[0].getComponent(cc.ParticleSystem).resetSystem()
+          this.starsNode.children[2].children[1].active = true
+          this.starsNode.children[2].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+        }, 600)
+
+        setTimeout(() => {
+          this.starsNode.children[2].children[0].getComponent(cc.ParticleSystem).resetSystem()
+        }, 900)
+      }, 500)
+
+      this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 3, this.goldShow)
+    } else if (penWidth > this.star1.x + 120) {
+      this.starsNode.children[2].children[1].active = false
+      this.starsNode.children[2].children[0].active = false
+      this.starsNode.children[1].children[1].active = false
+      setTimeout(() => {
+        this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+        setTimeout(() => {
+          this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem()
+          this.starsNode.children[1].children[1].active = true
+          this.starsNode.children[1].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+        }, 300)
+
+        setTimeout(() => {
+          this.starsNode.children[1].children[0].getComponent(cc.ParticleSystem).resetSystem()
+        }, 600)
+      }, 500)
+
+      this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 2, this.goldShow)
+    } else {
+      this.starsNode.children[1].children[1].active = false
+      this.starsNode.children[2].children[1].active = false
+      this.starsNode.children[1].children[0].active = false
+      this.starsNode.children[2].children[0].active = false
+      setTimeout(() => {
+        this.starsNode.children[0].children[1].runAction(cc.sequence(cc.scaleTo(0.3, 1).easing(cc.easeCubicActionIn()), action))
+        setTimeout(() => {
+          this.starsNode.children[0].children[0].getComponent(cc.ParticleSystem).resetSystem()
+        }, 300)
+      }, 500)
+
+      this.goldReward = LocalStorageData.updateLevelStar('level' + WorldController.currentLevel, 1, this.goldShow)
+    }
   },
 
   shake () {

@@ -8,11 +8,11 @@ module.exports = {
   bMusic: true,
 
   init () {
-    this.nCoins = cc.sys.localStorage.getItem('coins'),
-    this.bSound = cc.sys.localStorage.getItem('sound'),
-    this.bMusic = cc.sys.localStorage.getItem('music'),
-    this.nCoins = this.nCoins || this.nCoins == '0' ? this.nCoins : 10,
-    this.bSound = this.bSound != '0' ? '1' : '0',
+    this.nCoins = cc.sys.localStorage.getItem('coins')
+    this.bSound = cc.sys.localStorage.getItem('sound')
+    this.bMusic = cc.sys.localStorage.getItem('music')
+    this.nCoins = this.nCoins || this.nCoins == '0' ? this.nCoins : 10
+    this.bSound = this.bSound != '0' ? '1' : '0'
     this.bMusic = this.bMusic ? this.bMusic : 'true'
   },
 
