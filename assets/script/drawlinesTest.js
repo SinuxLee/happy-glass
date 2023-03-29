@@ -14,7 +14,7 @@ cc.Class({
   extends: cc.Component,
 
   onLoad () {
-    cc.PhysicsAABBQueryCallback.prototype.ReportFixture = function(e) {
+    cc.PhysicsAABBQueryCallback.prototype.ReportFixture = function (e) {
       if (this._isPoint) {
         if (e.TestPoint(this._point)) return this._fixtures.push(e), false
       } else this._fixtures.push(e)
