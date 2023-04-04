@@ -29,17 +29,17 @@ cc.Class({
         o.addComponent(cc.Sprite)
         o.getComponent(cc.Sprite).spriteFrame = i
         const c = o.addComponent('click')
-        t == 1 && (o.rotation = 90),
-        t == 2 && (o.rotation = 180),
+        t == 1 && (o.angle = -90),
+        t == 2 && (o.angle = -180),
         t == 14 && (o.width = 130, o.height = 130),
-        t == 15 && (o.rotation = -90),
-        t == 16 && (o.rotation = 90, o.scaleX = -1),
+        t == 15 && (o.angle = 90),
+        t == 16 && (o.angle = -90, o.scaleX = -1),
         t == 18 && (o.scaleX = -1),
         t == 22 && (o.scaleX = 0.5, o.scaleY = 0.5),
         t == 23 && (o.scaleX = 2, o.scaleY = 2)
         const a = o.width
         const l = o.height
-        a > l ? (o.width = 130, o.height = 130 / a * l) : a == l ? (o.width = 130, o.height = 130) : (o.height = 130, o.width = 130 / l * a), a < l && o.rotation != 0 && (o.width = 130), o.parent = this.itemNode, c.init(this.prefabAtlas[t], this.node)
+        a > l ? (o.width = 130, o.height = 130 / a * l) : a == l ? (o.width = 130, o.height = 130) : (o.height = 130, o.width = 130 / l * a), a < l && o.angle != 0 && (o.width = 130), o.parent = this.itemNode, c.init(this.prefabAtlas[t], this.node)
       })
     }
   },

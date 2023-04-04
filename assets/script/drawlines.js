@@ -166,7 +166,7 @@ cc.Class({
       m = d
       v = l
 
-      if (!(b = this.node.testrect(l.x, l.y))) return void (r = false)
+      if (!(b = this.testrect(l.x, l.y))) return void (r = false)
       h = true
       u = false
       p++

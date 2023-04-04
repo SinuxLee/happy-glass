@@ -12,7 +12,7 @@ cc.Class({
 
     let counter = 0
     let t = 0
-    this.node.parent.rotation == 90 ? t = 1 : this.node.parent.rotation == 180 && (t = 2),
+    this.node.parent.angle == -90 ? t = 1 : this.node.parent.angle == -180 && (t = 2),
     this.schedule(() => {
       const nodeWater = new cc.Node('water' + counter++)
       nodeWater.position = cc.v2(0, 0 + 50 * Math.random(0, 1))

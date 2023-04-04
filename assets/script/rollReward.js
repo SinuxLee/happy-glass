@@ -27,7 +27,7 @@ cc.Class({
     const e = cc.find('Canvas/rollLayer').getComponent('rollReward')
     switch (e.rewardType) {
       case 1:
-        e.zhuanpan.rotation = 0
+        e.zhuanpan.angle = 0
         e.rewardNum++
         e.reward()
     }
