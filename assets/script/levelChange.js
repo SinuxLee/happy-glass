@@ -16,7 +16,7 @@ cc.Class({
         wx.showToast && wx.showToast({
           title: '关卡未解锁',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       } else {
         cc.find('Canvas/level').getComponent('test').levelChange(level)

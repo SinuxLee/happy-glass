@@ -7,20 +7,19 @@ module.exports = {
       success: (ret) => {
         console.log(ret.data)
         const b = parseInt(ret.data)
-        if(b != null && b.length != 0 && !isNaN(b)) return
+        if (b != null && b.length != 0 && !isNaN(b)) return
 
         wx.setStorage({
           key: data.str,
           data: JSON.stringify(data.number)
         })
       },
-      
+
       fail: (err) => {
         console.log(err)
         wx.setStorage({
           key: data.str,
-          data: JSON.stringify(data.number),
-          success: function () { }
+          data: JSON.stringify(data.number)
         })
       }
     })
@@ -139,28 +138,28 @@ module.exports = {
     this.set('count', e + 1)
   },
 
-  updateLevelStar (e, b, _) {
-    if (cc.sys.localStorage.getItem(e) >= b) {
-      _.active = false
+  updateLevelStar (key, val, node) {
+    if (cc.sys.localStorage.getItem(key) >= val) {
+      node.active = false
       return 0
     }
 
-    if (isNaN(cc.sys.localStorage.getItem(e))) {
-      this.updateStars(b)
-      _.active = true
-      _.children[0].getComponent(cc.Label).string = '+' + 10 * b
-      this.updateGold(10 * b)
-      cc.sys.localStorage.setItem(e, b)
+    if (isNaN(cc.sys.localStorage.getItem(key))) {
+      this.updateStars(val)
+      node.active = true
+      node.children[0].getComponent(cc.Label).string = '+' + 10 * val
+      this.updateGold(10 * val)
+      cc.sys.localStorage.setItem(key, val)
 
-      return 10 * b
+      return 10 * val
     }
 
-    this.updateStars(b - cc.sys.localStorage.getItem(e))
-    _.active = true
-    _.children[0].getComponent(cc.Label).string = '+' + 10 * (b - cc.sys.localStorage.getItem(e))
-    this.updateGold(10 * (b - cc.sys.localStorage.getItem(e)))
-    const x = cc.sys.localStorage.getItem(e)
-    cc.sys.localStorage.setItem(e, b)
-    return 10 * (b - x)
+    this.updateStars(val - cc.sys.localStorage.getItem(key))
+    node.active = true
+    node.children[0].getComponent(cc.Label).string = '+' + 10 * (val - cc.sys.localStorage.getItem(key))
+    this.updateGold(10 * (val - cc.sys.localStorage.getItem(key)))
+    const x = cc.sys.localStorage.getItem(key)
+    cc.sys.localStorage.setItem(key, val)
+    return 10 * (val - x)
   }
 }

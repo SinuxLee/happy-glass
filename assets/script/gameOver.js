@@ -12,7 +12,6 @@ cc.Class({
   },
 
   onRewardAdClose () {
-    const e = cc.find('Canvas/gameOver').getComponent('gameOver')
   },
 
   onRewardAdStop () {

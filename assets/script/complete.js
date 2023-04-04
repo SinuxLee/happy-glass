@@ -120,7 +120,7 @@ cc.Class({
         wx.showToast({
           title: '成功领取30金币',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
         cc.find('Canvas/complete/completeNode/btnNode/shareBtn').active ? (cc.find('Canvas/complete/completeNode/btnNode/shareBtn').active = false, cc.find('Canvas/complete/completeNode/btnNode/vedioBtn').active = true) : (cc.find('Canvas/complete/completeNode/btnNode/shareBtn').active = true, cc.find('Canvas/complete/completeNode/btnNode/vedioBtn').active = false), WorldController.currentLevel < 5 && (cc.find('Canvas/complete/completeNode/btnNode/shareBtn2').active = false, cc.find('Canvas/complete/completeNode/btnNode/vedioBtn2').active = true, cc.find('Canvas/complete/completeNode/btnNode/shareBtn').active = false, cc.find('Canvas/complete/completeNode/btnNode/vedioBtn').active = true)
         break
@@ -129,7 +129,7 @@ cc.Class({
         wx.showToast({
           title: '成功领取3倍奖励',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
         cc.find('Canvas/complete/completeNode/btnNode/shareBtn2').active ? cc.find('Canvas/complete/completeNode/btnNode/shareBtn2').getComponent(cc.Button).interactable = false : cc.find('Canvas/complete/completeNode/btnNode/vedioBtn2').getComponent(cc.Button).interactable = false
     }
@@ -166,7 +166,7 @@ cc.Class({
       wx.showToast({
         title: '敬请期待后续关卡！',
         icon: 'none',
-        duration: 2e3
+        duration: 2000
       })
       this.click = false
 

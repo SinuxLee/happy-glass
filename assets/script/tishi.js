@@ -78,7 +78,7 @@ cc.Class({
 
     setTimeout(() => {
       WorldController.repeat && this.light && (this.light.active = true)
-    }, 1e3)
+    }, 1000)
 
     WorldController.tryWaterNum = Math.floor(6 * Math.random(0, 0.99))
     this.tryWaterNode.children[0].color = userType.tryWaterColor[WorldController.tryWaterNum]
@@ -99,7 +99,7 @@ cc.Class({
         WorldController.getLevelData(e.getAnswer, e)
         break
       case 3:
-        WorldController.totalLength = 3e3
+        WorldController.totalLength = 3000
         cc.find('Canvas/level/drawLine').getComponent('drawlines').addCanDrawTotalLength()
         break
       case 4:
@@ -107,7 +107,7 @@ cc.Class({
         wx.showToast({
           title: '试用成功！',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
     }
   },

@@ -55,8 +55,8 @@ cc.Class({
       this.shopGoldLabel.string = LocalStorageData.get('gold')
     }
 
-    let lv = LocalStorageData.get('levelNum')
-    if (isNaN(lv)) {
+    const lv = LocalStorageData.get('levelNum')
+    if (lv == null) {
       this.levelNum.string = '第1关',
       LocalStorageData.set('levelNum', 0)
     } else {
@@ -71,10 +71,8 @@ cc.Class({
     return Math.floor(e / 864e5)
   },
 
-  showGameBox (e) { },
-
-  setBlockInputEvents (e) {
-    this.maskLayer.active = e
+  setBlockInputEvents (block) {
+    this.maskLayer.active = block
   },
 
   inviteClicked (e) {
@@ -88,10 +86,6 @@ cc.Class({
     this.setBlockInputEvents(false)
   },
 
-  cleanInviteData () {
-
-  },
-
   startBtn () {
     if (!this.click) {
       this.click = true
@@ -100,7 +94,7 @@ cc.Class({
         return wx.showToast({
           title: '敬请期待后续关卡！',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       }
 
@@ -131,12 +125,6 @@ cc.Class({
     })
   },
 
-  openRank () {
-  },
-
-  closeRank () {
-  },
-
   openShop () {
     this.shopLayer.active = true
   },
@@ -150,9 +138,6 @@ cc.Class({
   },
 
   shareBtn () {
-  },
-
-  shareEvent () {
   },
 
   updateShopGold () {

@@ -1,8 +1,8 @@
 const WorldController = require('WorldController')
-const o = ['出水口@2x', '出水口@2x', '出水口@2x', '正常@2x', '1@2x', '2@2x', '3@2x',
+const images = ['出水口@2x', '出水口@2x', '出水口@2x', '正常@2x', '1@2x', '2@2x', '3@2x',
   '4@2x', '5@2x', '6@2x', '7@2x', '8@2x', '9@2x', '10@2x', '8@2x', '4@2x', '4@2x',
   '形状5@2x', '形状5@2x', '矩形12@2x', '19@2x', '椭圆4@2x', '椭圆4@2x', '椭圆4@2x', '十字架@2x']
-const c = ['moveBox1', 'moveBox2', 'moveBox3', 'moveBox4', 'moveBox5', 'glass']
+const rigids = ['moveBox1', 'moveBox2', 'moveBox3', 'moveBox4', 'moveBox5', 'glass']
 let levelItems = []
 
 cc.Class({
@@ -23,40 +23,72 @@ cc.Class({
 
   onLoad () {
     cc.director.getPhysicsManager().enabled = true
-    for (let t = 0; t < o.length; t++) {
-      cc.loader.loadRes('box/' + o[t], cc.SpriteFrame, (n, i) => {
-        const o = new cc.Node()
-        o.addComponent(cc.Sprite)
-        o.getComponent(cc.Sprite).spriteFrame = i
-        const c = o.addComponent('click')
-        t == 1 && (o.angle = -90),
-        t == 2 && (o.angle = -180),
-        t == 14 && (o.width = 130, o.height = 130),
-        t == 15 && (o.angle = 90),
-        t == 16 && (o.angle = -90, o.scaleX = -1),
-        t == 18 && (o.scaleX = -1),
-        t == 22 && (o.scaleX = 0.5, o.scaleY = 0.5),
-        t == 23 && (o.scaleX = 2, o.scaleY = 2)
-        const a = o.width
-        const l = o.height
-        a > l ? (o.width = 130, o.height = 130 / a * l) : a == l ? (o.width = 130, o.height = 130) : (o.height = 130, o.width = 130 / l * a), a < l && o.angle != 0 && (o.width = 130), o.parent = this.itemNode, c.init(this.prefabAtlas[t], this.node)
+
+    for (let i = 0; i < images.length; i++) {
+      cc.loader.loadRes('box/' + images[i], cc.SpriteFrame, (err, frame) => {
+        const node = new cc.Node()
+        node.addComponent(cc.Sprite)
+        node.getComponent(cc.Sprite).spriteFrame = frame
+
+        const c = node.addComponent('click')
+        switch (i) {
+          case 1: node.angle = -90; break
+          case 2: node.angle = -180; break
+          case 14:
+            node.width = 130
+            node.height = 130
+            break
+          case 15: node.angle = 90; break
+          case 16:
+            node.angle = -90
+            node.scaleX = -1
+            break
+          case 18: node.scaleX = -1; break
+          case 22:
+            node.scaleX = 0.5
+            node.scaleY = 0.5
+            break
+          case 23:
+            node.scaleX = 2
+            node.scaleY = 2
+            break
+        }
+
+        const { width, height } = node
+        if (width > height) {
+          node.width = 130
+          node.height = 130 / width * height
+        } else if (width == height) {
+          node.width = 130
+          node.height = 130
+        } else {
+          node.height = 130
+          node.width = 130 / height * width
+        }
+
+        if (width < height && node.angle != 0) {
+          node.width = 130
+          node.parent = this.itemNode
+          c.init(this.prefabAtlas[i], this.node)
+        }
       })
     }
   },
 
   over () {
-    const e = new cc.Node('drawline')
-    e.parent = this.node
-    e.addComponent('drawlinesTest').waterNode = this.getWaterNode()
-    const t = e.addComponent(cc.Widget)
-    t.isAlignTop = true
-    t.top = 0
-    t.isAlignBottom = true
-    t.bottom = 0
-    t.isAlignLeft = true
-    t.left = 0
-    t.isAlignRight = true
-    t.right = 0
+    const node = new cc.Node('drawline')
+    node.parent = this.node
+    node.addComponent('drawlinesTest').waterNode = this.getWaterNode()
+
+    const widget = node.addComponent(cc.Widget)
+    widget.isAlignTop = true
+    widget.top = 0
+    widget.isAlignBottom = true
+    widget.bottom = 0
+    widget.isAlignLeft = true
+    widget.left = 0
+    widget.isAlignRight = true
+    widget.right = 0
     console.log('over!!!')
 
     this.clearBtn.active = true
@@ -68,10 +100,15 @@ cc.Class({
 
   bianji () {
     this.clearLines()
-    const e = cc.find('Canvas/level/drawline')
-    e && e.destroy()
-    this.node.children.forEach((e) => {
-      for (let t = 0; t < c.length; t++) e.name == c[t] && (e.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static)
+    const node = cc.find('Canvas/level/drawline')
+    node && node.destroy()
+
+    this.node.children.forEach((node) => {
+      for (let i = 0; i < rigids.length; i++) {
+        if (node.name == rigids[i]) {
+          node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static
+        }
+      }
     })
 
     this.clearBtn.active = false
@@ -83,41 +120,58 @@ cc.Class({
   },
 
   getWaterNode () {
-    return cc.find('Canvas/level/out/waterNode') ? cc.find('Canvas/level/out/waterNode') : cc.find('Canvas/level/outTop/waterNode') ? cc.find('Canvas/level/outTop/waterNode') : cc.find('Canvas/level/outRight/waterNode') ? cc.find('Canvas/level/outRight/waterNode') : void 0
+    const path = [
+      'Canvas/level/out/waterNode',
+      'Canvas/level/outTop/waterNode',
+      'Canvas/level/outRight/waterNode'
+    ]
+
+    for (const p of path) {
+      const water = cc.find(p)
+      if (water) return water
+    }
+
+    return null
   },
 
   getLevelData (levelId) {
-    const t = []
-    for (let n = 0; n < this.node.children.length; n++) {
-      this.node.children[n].y < -this.node.height / 2
-        ? this.node.children[n].destroy()
-        : t.push({
-          name: this.node.children[n].name,
-          x: this.node.children[n].x,
-          y: this.node.children[n].y
-        })
-    }
+    const arr = []
+    node.children.forEach(node => {
+      if (node.y < -this.node.height / 2) return node.destroy()
 
-    const i = cc.find('Canvas/level/drawline').getComponent('drawlinesTest').getLinesData()
-    t.push({ levelID: levelId, answer: i })
-    console.log(t)
-    console.log(JSON.stringify(t))
-    return t
+      arr.push({
+        name: node.name,
+        x: node.x,
+        y: node.y
+      })
+    })
+
+    const data = cc.find('Canvas/level/drawline').getComponent('drawlinesTest').getLinesData()
+    arr.push({ levelID: levelId, answer: data })
+    console.log(JSON.stringify(arr))
+    return arr
   },
 
   clearLines () {
-    cc.find('Canvas/level/drawline') && cc.find('Canvas/level/drawline').getComponent('drawlinesTest').clearLines()
+    const drawLine = cc.find('Canvas/level/drawline')
+    if (drawLine) drawLine.getComponent('drawlinesTest').clearLines()
   },
 
   startTest () {
     levelItems = this.getLevelData('test')
-    this.node.children.forEach((e) => {
-      console.log(e)
-      for (let t = 0; t < c.length; t++) {
-        if (e.name == c[4]) return void (e.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
-        e.name == c[t] && (e.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
+    this.node.children.forEach((node) => {
+      for (let i = 0; i < rigids.length; i++) {
+        if (node.name == rigids[4]) {
+          node.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+          return
+        }
+
+        if (node.name == rigids[i]) {
+          node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+        }
       }
     })
+
     cc.find('Canvas/level/drawline').getComponent('drawlinesTest').startTest()
     this.toFileBtn.active = true
   },
@@ -125,16 +179,20 @@ cc.Class({
   recover () {
     this.clearLines()
     this.node.removeAllChildren()
-    levelItems.forEach((t) => {
-      if (t.name && t.name != 'drawline') {
-        const n = this.getPrefab(t.name)
-        const i = cc.instantiate(this.prefabAtlas[n])
-        i.addComponent('moveItem')
-        i.x = t.x
-        i.y = t.y
-        i.parent = this.node
-        t.name != 'out' && t.name != 'outTop' && t.name != 'outRight' || i.setSiblingIndex(0)
-      }
+    levelItems.forEach((item) => {
+      if (item.name !== 'drawline') return
+
+      const idx = this.getPrefab(item.name)
+      const node = cc.instantiate(this.prefabAtlas[idx])
+      node.addComponent('moveItem')
+      node.x = item.x
+      node.y = item.y
+      node.parent = this.node
+
+      if (item.name != 'out' && item.name != 'outTop' && item.name != 'outRight') return
+
+      // 出水口放到0号位置
+      node.setSiblingIndex(0)
     })
 
     this.clearBtn.active = false
@@ -146,29 +204,31 @@ cc.Class({
   },
 
   getPrefab (name) {
-    for (let t = 0; t < this.prefabAtlas.length; t++) {
-      if (this.prefabAtlas[t].name == name) return t
+    for (let i = 0; i < this.prefabAtlas.length; i++) {
+      if (this.prefabAtlas[i].name == name) return i
     }
   },
 
   toFile () {
     if (wx.getFileSystemManager) {
-      const t = wx.getFileSystemManager()
-      t.readFile({
+      const fs = wx.getFileSystemManager()
+      fs.readFile({
         filePath: wx.env.USER_DATA_PATH + '/level.json',
         encoding: 'utf8',
-        success: (n) => {
+        success: (res) => {
           if (WorldController.changeLevel) {
-            o = JSON.parse(n.data)
-            c = this.changeNum + 1
-            levelItems[levelItems.length - 1].levelID = c
-            console.log('levelID:', c)
-            o[c - 1] = levelItems
-            t.writeFile({
+            const levelData = JSON.parse(res.data)
+            const levelId = this.changeNum + 1
+            levelItems[levelItems.length - 1].levelID = levelId
+            levelData[levelId - 1] = levelItems
+
+            console.log('levelID:', levelId)
+
+            fs.writeFile({
               filePath: wx.env.USER_DATA_PATH + '/level.json',
-              data: JSON.stringify(o),
-              success: (t) => {
-                console.log('write file success' + t)
+              data: JSON.stringify(levelData),
+              success: (res) => {
+                console.log('write file success' + res)
                 this.clearLines()
                 cc.find('Canvas/tishi').getComponent(cc.Graphics).clear()
                 this.node.removeAllChildren()
@@ -178,21 +238,22 @@ cc.Class({
                 this.bianjiBtn.active = false
                 this.completeBtn.active = true
               },
-              fail: (e) => {
-                console.log('write file error' + e)
+              fail: (err) => {
+                console.log('write file error' + err)
               }
             })
           } else {
-            var o = JSON.parse(n.data)
-            var c = o.length + 1
-            levelItems[levelItems.length - 1].levelID = c
-            console.log('levelID:', c)
-            o.push(levelItems)
-            t.writeFile({
+            const levelData = JSON.parse(res.data)
+            const levelId = levelData.length + 1
+            levelItems[levelItems.length - 1].levelID = levelId
+            console.log('levelID:', levelId)
+            levelData.push(levelItems)
+
+            fs.writeFile({
               filePath: wx.env.USER_DATA_PATH + '/level.json',
-              data: JSON.stringify(o),
-              success: (t) => {
-                console.log('write file success' + t)
+              data: JSON.stringify(levelData),
+              success: (res) => {
+                console.log('write file success' + res)
                 this.clearLines()
                 this.node.removeAllChildren()
                 this.toFileBtn.active = false
@@ -208,20 +269,20 @@ cc.Class({
           }
         },
 
-        fail: (n) => {
+        fail: (err) => {
           console.log('read file null')
-          const i = []
-          i.push(this.getLevelData(1))
-          t.writeFile({
+          const arr = []
+          arr.push(this.getLevelData(1))
+          fs.writeFile({
             filePath: wx.env.USER_DATA_PATH + '/level.json',
-            data: JSON.stringify(i),
-            success: (t) => {
-              console.log('write file success' + t)
+            data: JSON.stringify(arr),
+            success: (res) => {
+              console.log('write file success' + res)
               this.clearLines()
               this.node.removeAllChildren()
             },
-            fail: (e) => {
-              console.log('write file error' + e.errMsg)
+            fail: (err) => {
+              console.log('write file error' + err.errMsg)
             }
           })
         }
@@ -229,39 +290,45 @@ cc.Class({
     }
   },
 
-  levelChange (e) {
+  levelChange (level) {
     wx.getFileSystemManager().readFile({
       filePath: wx.env.USER_DATA_PATH + '/level.json',
       encoding: 'utf8',
-      success: (n) => {
-        const o = JSON.parse(n.data)
-        levelItems = o[e]
+      success: (res) => {
+        const levelData = JSON.parse(res.data)
+        levelItems = levelData[level]
         WorldController.changeLevel = true
-        this.changeNum = e
+        this.changeNum = level
         this.clearLines()
         this.node.removeAllChildren()
-        levelItems.forEach((e) => {
-          if (e.name && e.name != 'drawline') {
-            const n = this.getPrefab(e.name)
-            const i = cc.instantiate(this.prefabAtlas[n])
-            i.addComponent('moveItem')
-            i.x = e.x
-            i.y = e.y
-            i.parent = this.node
-            e.name != 'out' && e.name != 'outTop' && e.name != 'outRight' || i.setSiblingIndex(0)
+
+        levelItems.forEach((item) => {
+          if (item.name !== 'drawline') {
+            const idx = this.getPrefab(item.name)
+            const node = cc.instantiate(this.prefabAtlas[idx])
+            node.addComponent('moveItem')
+            node.x = item.x
+            node.y = item.y
+            node.parent = this.node
+
+            if (item.name != 'out' && item.name != 'outTop' && item.name != 'outRight') return
+
+            node.setSiblingIndex(0)
           }
-          if (!e.name) {
-            const o = e.answer
+
+          if (!item.name) {
+            const arr = item.answer
             const gl = cc.find('Canvas/tishi').getComponent(cc.Graphics)
             gl.clear()
-            gl.moveTo(o[0].x, o[0].y - 30)
-            o.forEach((e) => {
-              gl.lineTo(e.x, e.y - 30)
+            gl.moveTo(arr[0].x, arr[0].y - 30)
+            arr.forEach((pos) => {
+              gl.lineTo(pos.x, pos.y - 30)
               gl.stroke()
-              gl.moveTo(e.x, e.y - 30)
+              gl.moveTo(pos.x, pos.y - 30)
             })
           }
         })
+
         this.clearBtn.active = false
         this.testBtn.active = false
         this.toFileBtn.active = false
@@ -269,7 +336,8 @@ cc.Class({
         this.recoverBtn.active = false
         this.completeBtn.active = true
       },
-      fail: (e) => {
+
+      fail: (err) => {
         console.log('read file null')
       }
     })

@@ -4,15 +4,15 @@ const LocalStorageData = require('LocalStorageData')
 let i = 0
 let s = 0
 let r = false
-let d = cc.v2(0, 0)
-let l = cc.v2(0, 0)
+let relTouchPos = cc.v2(0, 0)
+let touchPos = cc.v2(0, 0)
 let h = false
-let p = 0
-let g = 0
+let lineId = 0
+let eventId = 0
 let m = cc.v2(0, 0)
 let v = cc.v2(0, 0)
 let u = false
-const C = ['moveBox1', 'moveBox2', 'moveBox3', 'moveBox4', 'moveBox5', 'glass']
+const rigids = ['moveBox1', 'moveBox2', 'moveBox3', 'moveBox4', 'moveBox5', 'glass']
 
 cc.Class({
   extends: cc.Component,
@@ -38,7 +38,7 @@ cc.Class({
     this._physics = cc.director.getPhysicsManager()
     this._physics.enabled = true
 
-    p = 0
+    lineId = 0
     i = 0
     s = WorldController.totalLength
 
@@ -49,49 +49,63 @@ cc.Class({
   },
 
   startDraw (event) {
-    if (s && !r) {
-      r = true
-      g = event.getID()
-      WorldController.currentLevel == 0 && (cc.find('Canvas/UILayer/hand').stopAllActions(), cc.find('Canvas/UILayer/hand').active = false)
-      l = event.getLocation()
-      d = this.node.convertToNodeSpaceAR(l)
-      m = d
-      v = l
-      if (this._physics.testAABB(cc.rect(d.x, d.y, 4.5, 4.5)).length != 0) {
-        r = false
-        return
-      }
+    if (!s || r) return
 
-      h = true
-      u = false
-      p++
-      const n = new cc.Node('line' + p)
-      const i = n.addComponent(cc.Graphics)
-      const C = n.addComponent(cc.RigidBody)
-      this.node.addChild(n)
-      C.gravityScale = 0
-      C.type = cc.RigidBodyType.Static
-      i.strokeColor = userType.penColor[LocalStorageData.get('selectPen')]
-      i.lineCap = cc.Graphics.LineCap.ROUND
-      i.lineWidth = 9
-      i.moveTo(d.x, d.y)
-      this.node.getComponent('drawlines').penNode.getComponent(cc.Sprite).spriteFrame = this.node.getComponent('drawlines').penSprite[LocalStorageData.get('selectPen')]
-      this.node.getComponent('drawlines').penNode.position = d
-      this.node.getComponent('drawlines').penNode.active = true
-      this.node.getComponent('drawlines').penNode.runAction(cc.repeatForever(cc.sequence(cc.rotateTo(0.2, 15), cc.rotateTo(0.2, -15))))
-      cc.find('Canvas/UILayer/btnLayer/tishiBtn').getComponent(cc.Button).interactable = false
-      cc.find('Canvas/UILayer/btnLayer/drawAdd').getComponent(cc.Button).interactable = false
-      cc.find('Canvas/UILayer/btnLayer/tryItem').getComponent(cc.Button).interactable = false
+    r = true
+    eventId = event.getID()
+    if (WorldController.currentLevel == 0) {
+      const hand = cc.find('Canvas/UILayer/hand')
+      hand.stopAllActions()
+      hand.active = false
     }
+
+    touchPos = event.getLocation()
+    relTouchPos = this.node.convertToNodeSpaceAR(touchPos)
+
+    m = relTouchPos
+    v = touchPos
+
+    const rect = cc.rect(relTouchPos.x, relTouchPos.y, 4.5, 4.5)
+    if (this._physics.testAABB(rect).length != 0) {
+      r = false
+      return
+    }
+
+    h = true
+    u = false
+    lineId++
+
+    const line = new cc.Node('line' + lineId)
+    this.node.addChild(line)
+
+    const rigidBody = line.addComponent(cc.RigidBody)
+    rigidBody.gravityScale = 0
+    rigidBody.type = cc.RigidBodyType.Static
+
+    const gl = line.addComponent(cc.Graphics)
+    gl.strokeColor = userType.penColor[LocalStorageData.get('selectPen')]
+    gl.lineCap = cc.Graphics.LineCap.ROUND
+    gl.lineWidth = 9
+    gl.moveTo(relTouchPos.x, relTouchPos.y)
+
+    const penNode = this.node.getComponent('drawlines').penNode
+    penNode.getComponent(cc.Sprite).spriteFrame = this.node.getComponent('drawlines').penSprite[LocalStorageData.get('selectPen')]
+    penNode.position = relTouchPos
+    penNode.active = true
+    penNode.runAction(cc.repeatForever(cc.sequence(cc.rotateTo(0.2, 15), cc.rotateTo(0.2, -15))))
+
+    cc.find('Canvas/UILayer/btnLayer/tishiBtn').getComponent(cc.Button).interactable = false
+    cc.find('Canvas/UILayer/btnLayer/drawAdd').getComponent(cc.Button).interactable = false
+    cc.find('Canvas/UILayer/btnLayer/tryItem').getComponent(cc.Button).interactable = false
   },
 
   drawingLine (event) {
     if (h) {
-      if (g === event.getID()) {
-        l = event.getLocation()
-        d = this.node.convertToNodeSpaceAR(l)
+      if (eventId === event.getID()) {
+        touchPos = event.getLocation()
+        relTouchPos = this.node.convertToNodeSpaceAR(touchPos)
         if (s <= 0) {
-          const lineNode = this.node.getChildByName('line' + p)
+          const lineNode = this.node.getChildByName('line' + lineId)
           lineNode.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
           lineNode.getComponent(cc.RigidBody).gravityScale = 3.5
           lineNode.group = 'line'
@@ -104,86 +118,109 @@ cc.Class({
           return
         }
 
-        b = this.testrect(l.x, l.y)
-        this.wideRaycast(v.x, v.y, l.x, l.y)
-        if (b && !u) {
-          const w = d.sub(m).mag()
-          const lineNode = this.node.getChildByName('line' + p)
-          const lineGL = lineNode.getComponent(cc.Graphics)
-          lineGL.lineTo(d.x, d.y)
-          lineGL.stroke()
-          lineGL.moveTo(d.x, d.y)
+        isInRect = this.testrect(touchPos.x, touchPos.y)
+        this.wideRaycast(v.x, v.y, touchPos.x, touchPos.y)
+        if (isInRect && !u) {
+          const newLineLen = relTouchPos.sub(m).mag()
+          const lineNode = this.node.getChildByName('line' + lineId)
+          const gl = lineNode.getComponent(cc.Graphics)
+          gl.lineTo(relTouchPos.x, relTouchPos.y)
+          gl.stroke()
+          gl.moveTo(relTouchPos.x, relTouchPos.y)
 
-          if (w > 8) {
-            if (w < 10) {
+          if (newLineLen > 8) {
+            if (newLineLen < 10) {
               const circle = lineNode.addComponent(cc.PhysicsCircleCollider)
-              circle.offset = cc.v2(d.x, d.y)
+              circle.offset = cc.v2(relTouchPos.x, relTouchPos.y)
               circle.radius = 4.5
               circle.density = 1
               circle.apply()
             } else {
-              for (let y = w / 10, f = 1; f < y; f++) {
-                const pos = cc.v2(m.x + 10 * f * (d.x - m.x) / w, m.y + 10 * f * (d.y - m.y) / w)
+              for (let y = newLineLen / 10, f = 1; f < y; f++) {
+                const xLen = m.x + 10 * f * (relTouchPos.x - m.x) / newLineLen
+                const yLen = m.y + 10 * f * (relTouchPos.y - m.y) / newLineLen
+
                 const circle = lineNode.addComponent(cc.PhysicsCircleCollider)
-                circle.offset = pos
+                circle.offset = cc.v2(xLen, yLen)
                 circle.radius = 4.5
                 circle.density = 1
                 circle.apply()
               }
 
               const circle = lineNode.addComponent(cc.PhysicsCircleCollider)
-              circle.offset = cc.v2(d.x, d.y)
+              circle.offset = cc.v2(relTouchPos.x, relTouchPos.y)
               circle.radius = 4.5
               circle.density = 1
               circle.apply()
             }
-            m = d
-            v = l
-            i += w
-            s -= w
-            s / WorldController.totalLength * 240 > 0 ? (cc.find('Canvas/UILayer/pen/lineLength').width = s / WorldController.totalLength * 240, WorldController.totalLength == 3e3 ? this.percentShow.string = (s / WorldController.totalLength * 200).toFixed(0) + '%' : this.percentShow.string = (s / WorldController.totalLength * 100).toFixed(0) + '%') : (cc.find('Canvas/UILayer/pen/lineLength').width = 0, this.percentShow.string = '0%')
+            m = relTouchPos
+            v = touchPos
+            i += newLineLen
+            s -= newLineLen
+
+            if (s / WorldController.totalLength * 240 > 0) {
+              cc.find('Canvas/UILayer/pen/lineLength').width = s / WorldController.totalLength * 240
+              if (WorldController.totalLength == 3000) {
+                this.percentShow.string = (s / WorldController.totalLength * 200).toFixed(0) + '%'
+              } else {
+                this.percentShow.string = (s / WorldController.totalLength * 100).toFixed(0) + '%'
+              }
+            } else {
+              cc.find('Canvas/UILayer/pen/lineLength').width = 0
+              this.percentShow.string = '0%'
+            }
           }
 
           cc.find('Canvas/music').getComponent('musicManager').penAudio()
-          this.node.getComponent('drawlines').penNode.position = d
+          this.node.getComponent('drawlines').penNode.position = relTouchPos
           this.node.getComponent('drawlines').penNode.active = true
         } else {
-          const n = new cc.Node('err' + p)
-          const S = n.addComponent(cc.Graphics)
-          S.getComponent(cc.Graphics).clear()
-          S.getComponent(cc.Graphics).moveTo(m.x, m.y)
-          S.getComponent(cc.Graphics).strokeColor = cc.color(255, 0, 0)
-          S.getComponent(cc.Graphics).lineTo(d.x, d.y)
-          S.getComponent(cc.Graphics).stroke()
+          const line = new cc.Node('err' + lineId)
+          const gl = line.addComponent(cc.Graphics)
+          gl.getComponent(cc.Graphics).clear()
+          gl.getComponent(cc.Graphics).moveTo(m.x, m.y)
+          gl.getComponent(cc.Graphics).strokeColor = cc.color(255, 0, 0)
+          gl.getComponent(cc.Graphics).lineTo(relTouchPos.x, relTouchPos.y)
+          gl.getComponent(cc.Graphics).stroke()
         }
       }
     } else if (!r) {
-      var b
+      var isInRect
       r = true
-      g = event.getID()
-      l = event.getLocation()
-      d = this.node.convertToNodeSpaceAR(l)
-      m = d
-      v = l
+      eventId = event.getID()
+      touchPos = event.getLocation()
+      relTouchPos = this.node.convertToNodeSpaceAR(touchPos)
+      m = relTouchPos
+      v = touchPos
 
-      if (!(b = this.testrect(l.x, l.y))) return void (r = false)
+      isInRect = this.testrect(touchPos.x, touchPos.y)
+      if (!isInRect) {
+        r = false
+        return
+      }
       h = true
       u = false
-      p++
-      const R = new cc.Node('line' + p)
-      const L = R.addComponent(cc.Graphics)
-      const A = R.addComponent(cc.RigidBody)
-      this.node.addChild(R)
-      A.gravityScale = 0
-      A.type = cc.RigidBodyType.Static
-      L.strokeColor = userType.penColor[LocalStorageData.get('selectPen')]
-      L.lineCap = cc.Graphics.LineCap.ROUND
-      L.lineWidth = 9
-      L.moveTo(d.x, d.y)
-      this.node.getComponent('drawlines').penNode.getComponent(cc.Sprite).spriteFrame = this.node.getComponent('drawlines').penSprite[LocalStorageData.get('selectPen')]
-      this.node.getComponent('drawlines').penNode.position = d
-      this.node.getComponent('drawlines').penNode.active = true
-      this.node.getComponent('drawlines').penNode.runAction(cc.repeatForever(cc.sequence(cc.rotateTo(0.2, 15), cc.rotateTo(0.2, -15))))
+      lineId++
+
+      const line = new cc.Node('line' + lineId)
+      this.node.addChild(line)
+
+      const rigidBody = line.addComponent(cc.RigidBody)
+      rigidBody.gravityScale = 0
+      rigidBody.type = cc.RigidBodyType.Static
+
+      const gl = line.addComponent(cc.Graphics)
+      gl.strokeColor = userType.penColor[LocalStorageData.get('selectPen')]
+      gl.lineCap = cc.Graphics.LineCap.ROUND
+      gl.lineWidth = 9
+      gl.moveTo(relTouchPos.x, relTouchPos.y)
+
+      const penNode = this.node.getComponent('drawlines').penNode
+      penNode.getComponent(cc.Sprite).spriteFrame = this.node.getComponent('drawlines').penSprite[LocalStorageData.get('selectPen')]
+      penNode.position = relTouchPos
+      penNode.active = true
+      penNode.runAction(cc.repeatForever(cc.sequence(cc.rotateTo(0.2, 15), cc.rotateTo(0.2, -15))))
+
       cc.find('Canvas/UILayer/btnLayer/tishiBtn').getComponent(cc.Button).interactable = false
       cc.find('Canvas/UILayer/btnLayer/drawAdd').getComponent(cc.Button).interactable = false
       cc.find('Canvas/UILayer/btnLayer/tryItem').getComponent(cc.Button).interactable = false
@@ -191,17 +228,28 @@ cc.Class({
   },
 
   stopDraw (event) {
-    if (h && g === event.getID()) {
+    if (h && eventId === event.getID()) {
       if (s > 0 && i > 0) {
-        const n = this.node.getChildByName('line' + p)
-        n.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
-        n.getComponent(cc.RigidBody).gravityScale = 3.5
-        n.group = 'line'
-        WorldController.waterIsSpawn || (WorldController.waterIsSpawn = true, this.getWaterNode().getComponent('water').spawnWater())
-        this.node.parent.children.forEach((e) => {
-          for (let t = 0; t < C.length; t++) {
-            if (e.name == C[4]) return void (e.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
-            e.name == C[t] && (e.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
+        const line = this.node.getChildByName('line' + lineId)
+        line.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+        line.getComponent(cc.RigidBody).gravityScale = 3.5
+        line.group = 'line'
+
+        if (!WorldController.waterIsSpawn) {
+          WorldController.waterIsSpawn = true
+          this.getWaterNode().getComponent('water').spawnWater()
+        }
+
+        this.node.parent.children.forEach((node) => {
+          for (let i = 0; i < rigids.length; i++) {
+            if (node.name == rigids[4]) {
+              node.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+              return
+            }
+
+            if (node.name == rigids[i]) {
+              node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+            }
           }
         })
 
@@ -217,18 +265,28 @@ cc.Class({
   },
 
   cancelDraw (event) {
-    if (h && g === event.getID()) {
+    if (h && eventId === event.getID()) {
       if (s > 0 && i > 0) {
-        const n = this.node.getChildByName('line' + p)
-        n.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
-        n.getComponent(cc.RigidBody).gravityScale = 3.5
-        n.group = 'line'
+        const line = this.node.getChildByName('line' + lineId)
+        line.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+        line.getComponent(cc.RigidBody).gravityScale = 3.5
+        line.group = 'line'
 
-        WorldController.waterIsSpawn || (WorldController.waterIsSpawn = true, this.getWaterNode().getComponent('water').spawnWater())
-        this.node.parent.children.forEach((e) => {
-          for (let t = 0; t < C.length; t++) {
-            if (e.name == C[4]) return void (e.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
-            e.name == C[t] && (e.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic)
+        if (!WorldController.waterIsSpawn) {
+          WorldController.waterIsSpawn = true
+          this.getWaterNode().getComponent('water').spawnWater()
+        }
+
+        this.node.parent.children.forEach((node) => {
+          for (let i = 0; i < rigids.length; i++) {
+            if (node.name == rigids[4]) {
+              node.children[0].getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+              return
+            }
+
+            if (node.name == rigids[i]) {
+              node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic
+            }
           }
         })
 
@@ -244,21 +302,32 @@ cc.Class({
   },
 
   getWaterNode () {
-    return cc.find('Canvas/level/out/waterNode') ? cc.find('Canvas/level/out/waterNode') : cc.find('Canvas/level/outTop/waterNode') ? cc.find('Canvas/level/outTop/waterNode') : cc.find('Canvas/level/outRight/waterNode') ? cc.find('Canvas/level/outRight/waterNode') : void 0
+    const path = [
+      'Canvas/level/out/waterNode',
+      'Canvas/level/outTop/waterNode',
+      'Canvas/level/outRight/waterNode'
+    ]
+
+    for (const p of path) {
+      const water = cc.find(p)
+      if (water) return water
+    }
+
+    return null
   },
 
   testrect (e, t) {
     const n = cc.director.getPhysicsManager()
     const a = n.testPoint(cc.v2(e - 4.5, t - 4.5))
-    if (a == null || a.node.name == 'line' + p) {
+    if (a == null || a.node.name == 'line' + lineId) {
       const o = n.testPoint(cc.v2(e - 4.5, t + 4.5))
-      if (o == null || o.node.name == 'line' + p) {
+      if (o == null || o.node.name == 'line' + lineId) {
         const c = n.testPoint(cc.v2(e + 4.5, t - 4.5))
-        if (c == null || c.node.name == 'line' + p) {
+        if (c == null || c.node.name == 'line' + lineId) {
           const i = n.testPoint(cc.v2(e + 4.5, t + 4.5))
-          if (i == null || i.node.name == 'line' + p) {
+          if (i == null || i.node.name == 'line' + lineId) {
             const s = n.testPoint(cc.v2(e, t))
-            if (s == null || s.node.name == 'line' + p) return true
+            if (s == null || s.node.name == 'line' + lineId) return true
           }
         }
       }
@@ -274,7 +343,7 @@ cc.Class({
     const r = o.rayCast(cc.v2(e - i, t - s), cc.v2(n - i, a - s), cc.RayCastType.All)
     if (r.length > 0) {
       for (var d = 0; d < r.length; d++) {
-        if (r[d].collider.node.name != 'line' + p) {
+        if (r[d].collider.node.name != 'line' + lineId) {
           u = true
           break
         }
@@ -284,7 +353,7 @@ cc.Class({
     const l = o.rayCast(cc.v2(e + i, t + s), cc.v2(n + i, a + s), cc.RayCastType.All)
     if (l.length > 0) {
       for (d = 0; d < l.length; d++) {
-        if (l[d].collider.node.name != 'line' + p) {
+        if (l[d].collider.node.name != 'line' + lineId) {
           u = true
           break
         }
@@ -294,8 +363,7 @@ cc.Class({
   },
 
   addCanDrawTotalLength () {
-    s = 3e3
-    this.percentShow.string = (s / WorldController.totalLength * 200).toFixed(0) + '%'
+    this.percentShow.string = (3000 / WorldController.totalLength * 200).toFixed(0) + '%'
   },
 
   onDestroy () {
@@ -303,6 +371,11 @@ cc.Class({
   },
 
   update (e) {
-    WorldController.begin && cc.director.getTotalFrames() - WorldController.frames > 480 && (WorldController.win || (cc.find('Canvas/gameOver').active = true, cc.find('Canvas/music').getComponent('musicManager').loseAudio()))
+    if (WorldController.begin && cc.director.getTotalFrames() - WorldController.frames > 480) {
+      if (WorldController.win) return
+
+      cc.find('Canvas/gameOver').active = true
+      cc.find('Canvas/music').getComponent('musicManager').loseAudio()
+    }
   }
 })

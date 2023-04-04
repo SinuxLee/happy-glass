@@ -85,7 +85,7 @@ cc.Class({
         wx.showToast && wx.showToast({
           title: '金币不足',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       }
     } else if (type == 2) {
@@ -103,7 +103,7 @@ cc.Class({
         wx.showToast && wx.showToast({
           title: '奖励专属皮肤，不可购买',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       } else if (LocalStorageData.get('gold') >= shopItemData.glassGold[idx]) {
         console.log('购买')
@@ -118,7 +118,7 @@ cc.Class({
         wx.showToast && wx.showToast({
           title: '金币不足',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       }
     } else if (type == 3) {
@@ -145,7 +145,7 @@ cc.Class({
         wx.showToast && wx.showToast({
           title: '金币不足',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
       }
     }

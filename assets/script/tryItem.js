@@ -56,12 +56,12 @@ cc.Class({
     }
   },
 
-  onLoad() {
+  onLoad () {
     this.showItem = false
   },
 
-  onEnable() {
-    setTimeout(() => this.closeBtn.active = true, 2e3)
+  onEnable () {
+    setTimeout(() => this.closeBtn.active = true, 2000)
 
     this.glass = []
     this.scheduleOnce(() => {
@@ -122,7 +122,7 @@ cc.Class({
     WorldController.tryWater = false
   },
 
-  onRewardAdClose() {
+  onRewardAdClose () {
     const item = cc.find('Canvas/tryItem').getComponent('tryItem')
     switch (item.rewardType) {
       case 1:
@@ -133,7 +133,7 @@ cc.Class({
     }
   },
 
-  onRewardAdStop() {
+  onRewardAdStop () {
     cc.find('Canvas/tryItem').getComponent('tryItem').tishi == 1
       ? wx.showToast({
         title: '只有观看完整视频才能获得奖励哦',
@@ -147,7 +147,7 @@ cc.Class({
       })
   },
 
-  getGlassNum() {
+  getGlassNum () {
     const arr = []
     for (let i = 0; i < 8; i++) {
       if (isNaN(LocalStorageData.get('glass' + i))) {
@@ -157,10 +157,10 @@ cc.Class({
     }
     if (arr.length > 0) {
       return arr[Math.floor(Math.random(0, 0.99) * arr.length)]
-    } else if (this.showItem) return 0 ; else this.close()
+    } else if (this.showItem) return 0; else this.close()
   },
 
-  getWaterNum() {
+  getWaterNum () {
     for (let i = 0; i < 12; i++) {
       if (isNaN(LocalStorageData.get('water' + i))) {
         this.tryType = 2
@@ -170,7 +170,7 @@ cc.Class({
     return this.getPenNum()
   },
 
-  getPenNum() {
+  getPenNum () {
     for (let i = 0; i < 6; i++) {
       if (isNaN(LocalStorageData.get('pen' + i))) {
         this.tryType = 3
@@ -180,14 +180,14 @@ cc.Class({
     return this.close()
   },
 
-  tryBtn() {
+  tryBtn () {
     this.rewardType = 1
     this.tishi = 1
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
     GameDataManager.setRewardStopClass(this.onRewardAdStop)
   },
 
-  shareBtn() {
+  shareBtn () {
     this.rewardType = 1
     this.tishi = 2
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
@@ -195,7 +195,7 @@ cc.Class({
     WorldController.share = true
   },
 
-  useEvent() {
+  useEvent () {
     LocalStorageData.set('glass9', 1)
     const idx = LocalStorageData.get('selectGlass')
     LocalStorageData.set('glass' + idx, 0)
@@ -203,7 +203,7 @@ cc.Class({
     this.close()
   },
 
-  close() {
+  close () {
     this.node.active = false
     cc.find('Canvas/complete').active = true
     cc.find('Canvas/complete').getComponent('complete').init()

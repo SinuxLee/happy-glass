@@ -48,7 +48,8 @@ cc.Class({
   },
 
   penAudio () {
-    this.penEffect && cc.audioEngine.getState(this.penEffect) != -1 || (this.penEffect = cc.audioEngine.play(this.pen, false, 0.5))
+    if (this.penEffect && cc.audioEngine.getState(this.penEffect) != -1) return
+    this.penEffect = cc.audioEngine.play(this.pen, false, 0.5)
   },
 
   stopPenAudio () {

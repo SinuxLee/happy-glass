@@ -18,7 +18,7 @@ cc.Class({
         wx.showToast({
           title: '成功领取150金币',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
         cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = LocalStorageData.get('gold')
         checkIn.close()
@@ -28,7 +28,7 @@ cc.Class({
         wx.showToast({
           title: '成功领取300金币',
           icon: 'none',
-          duration: 2e3
+          duration: 2000
         })
         cc.find('Canvas/ui/gold/goldNum').getComponent(cc.Label).string = LocalStorageData.get('gold')
         checkIn.close()

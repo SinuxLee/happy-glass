@@ -11,7 +11,7 @@ cc.Class({
       this.timeout = setTimeout(() => {
         cc.find('Canvas/gameOver').active = true
         cc.find('Canvas/music').getComponent('musicManager').loseAudio()
-      }, 1e3)
+      }, 1000)
 
       otherCollider.node.destroy()
     }

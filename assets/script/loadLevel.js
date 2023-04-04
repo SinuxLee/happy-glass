@@ -14,22 +14,24 @@ cc.Class({
     WorldController.getLevelData(this.getLevelData, this)
   },
 
-  getLevelData (e, t) {
-    WorldController.levelData[e].forEach((e) => {
-      if (e.name && e.name != 'drawline') {
-        const n = t.getPrefab(e.name)
-        const i = cc.instantiate(t.prefabAtlas[n])
-        i.x = e.x
-        i.y = e.y
-        i.parent = t.itemNode
-        e.name != 'out' && e.name != 'outTop' && e.name != 'outRight' || i.setSiblingIndex(0)
+  getLevelData (level, t) {
+    WorldController.levelData[level].forEach((obj) => {
+      if (obj.name && obj.name != 'drawline') {
+        const idx = t.getPrefab(obj.name)
+        const node = cc.instantiate(t.prefabAtlas[idx])
+        node.x = obj.x
+        node.y = obj.y
+        node.parent = t.itemNode
+        if (obj.name != 'out' && obj.name != 'outTop' && obj.name != 'outRight') return
+
+        node.setSiblingIndex(0)
       }
     })
   },
 
-  getPrefab (e) {
-    for (let t = 0; t < this.prefabAtlas.length; t++) {
-      if (this.prefabAtlas[t].name == e) return t
+  getPrefab (name) {
+    for (let i = 0; i < this.prefabAtlas.length; i++) {
+      if (this.prefabAtlas[i].name == name) return i
     }
   }
 })

@@ -10,7 +10,7 @@ cc.Class({
     WorldController.getLevelData(this.showItem, this)
   },
 
-  showItem (e, t) {
+  showItem (curLV, t) {
     for (let n = 0; n < WorldController.levelNum; n++) {
       const o = cc.instantiate(t.itemPrefab)
       o.getComponent('levelItem').init(n)

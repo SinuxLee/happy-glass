@@ -103,29 +103,27 @@ cc.Class({
     this.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[0]
   },
 
-  onBeginContact (e, t, n) {
-    if (!(n.tag == 111 && t.tag == 666)) {
-      return
+  onBeginContact (contact, selfCollider, otherCollider) {
+    if (otherCollider.tag != 111 || selfCollider.tag != 666) return
+
+    selfCollider.node.getComponent('glass').waterNum++
+    contact.disabled = true
+    otherCollider.tag = 0
+
+    if (this.waterNum >= WorldController.winWaterNum / 2 && this.waterNum < WorldController.winWaterNum) {
+      selfCollider.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[1]
     }
 
-    t.node.getComponent('glass').waterNum++
-    e.disabled = true
-    n.tag = 0
+    if (this.waterNum < WorldController.winWaterNum || WorldController.win) return
 
-    this.waterNum >= WorldController.winWaterNum / 2 && this.waterNum < WorldController.winWaterNum && (t.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[1])
-
-    if (!(this.waterNum >= WorldController.winWaterNum && !WorldController.win)) {
-      return
-    }
-
-    t.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[2]
+    selfCollider.node.parent.getComponent(cc.Sprite).spriteFrame = this.glass[2]
     WorldController.win = true
     console.log('success')
 
     const gameover = cc.find('Canvas/gameOver')
     if (gameover && !gameover.active) {
       cc.find('Canvas/music').getComponent('musicManager').completeAudio()
-      t.node.getComponent('glass').complete.resetSystem()
+      selfCollider.node.getComponent('glass').complete.resetSystem()
 
       this.timeout = setTimeout(() => {
         if (WorldController.completeCount % 3 == 0) {
@@ -134,7 +132,7 @@ cc.Class({
           cc.find('Canvas/tryItem').active = true
           WorldController.completeCount++
         }
-      }, 1e3)
+      }, 1000)
     }
   },
 
