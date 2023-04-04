@@ -31,11 +31,12 @@ module.exports = {
   },
 
   getcurrentLevel () {
-    if (isNaN(LocalStorageData.get('levelNum')) || void 0 === LocalStorageData.get('levelNum')) {
+    const lv = LocalStorageData.get('levelNum')
+    if (lv == null) {
       LocalStorageData.set('levelNum', 0)
       this.currentLevel = 0
     } else {
-      this.currentLevel = LocalStorageData.get('levelNum')
+      this.currentLevel = lv
     }
   }
 }

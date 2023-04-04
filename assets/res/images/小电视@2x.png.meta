@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "347fa81c-55f5-451f-8697-c093e1cfb9af",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "小电视@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "bd534408-c278-484e-98a1-01230afb0492",
+      "importer": "sprite-frame",
       "rawTextureUuid": "347fa81c-55f5-451f-8697-c093e1cfb9af",
       "trimType": "auto",
       "trimThreshold": 1,

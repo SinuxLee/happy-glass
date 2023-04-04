@@ -15,62 +15,74 @@ cc.Class({
     reward2: cc.SpriteFrame
   },
 
-  onLoad () {
+  onLoad() {
     this.rewardNum = 0
   },
 
-  onEnable () {
-    isNaN(LocalStorageData.get('glass9')) || (this.zhuanpan.getComponent(cc.Sprite).spriteFrame = this.reward2)
+  onEnable() {
+    if (isNaN(LocalStorageData.get('glass9'))) return
+
+    this.zhuanpan.getComponent(cc.Sprite).spriteFrame = this.reward2
   },
 
-  onRewardAdClose () {
-    const e = cc.find('Canvas/rollLayer').getComponent('rollReward')
-    switch (e.rewardType) {
+  onRewardAdClose() {
+    const reward = cc.find('Canvas/rollLayer').getComponent('rollReward')
+    switch (reward.rewardType) {
       case 1:
-        e.zhuanpan.angle = 0
-        e.rewardNum++
-        e.reward()
+        reward.zhuanpan.angle = 0
+        reward.rewardNum++
+        reward.reward()
     }
   },
 
-  onRewardAdStop () {
-    const e = cc.find('Canvas/rollLayer').getComponent('rollReward')
-    e.tishi == 1
-      ? (wx.showToast({
-          title: '只有观看完整视频才能获得奖励哦',
-          icon: 'none',
-          duration: 2500
-        }), e.videoBtn.getComponent('cc.Button').interactable = true)
-      : (wx.showToast({
-          title: WorldController.shareError[Math.floor(3 * Math.random(0, 0.99))],
-          icon: 'none',
-          duration: 2500
-        }), e.shareBtn.getComponent('cc.Button').interactable = true)
+  onRewardAdStop() {
+    const reward = cc.find('Canvas/rollLayer').getComponent('rollReward')
+    if (reward.tishi == 1) {
+      wx.showToast({
+        title: '只有观看完整视频才能获得奖励哦',
+        icon: 'none',
+        duration: 2500
+      })
+      reward.videoBtn.getComponent('cc.Button').interactable = true
+    } else {
+      wx.showToast({
+        title: WorldController.shareError[Math.floor(3 * Math.random(0, 0.99))],
+        icon: 'none',
+        duration: 2500
+      })
+      reward.shareBtn.getComponent('cc.Button').interactable = true
+    }
   },
 
-  getRandom (e, t) {
-    return Math.floor(Math.random(0, 0.99) * (t - e)) + e
+  getRandom(min, max) {
+    return Math.floor(Math.random(0, 0.99) * (max - min)) + min
   },
 
-  getEnd (e) {
-    console.log(e)
-    return e < 2 ? this.getRandom(0, 360 / this.itemNum - 1) : e < 17 ? 360 / this.itemNum + this.getRandom(0, 360 / this.itemNum - 1) : e < 27 ? 360 / this.itemNum * 2 + this.getRandom(0, 360 / this.itemNum - 1) : e < 47 ? 360 / this.itemNum * 3 + this.getRandom(0, 360 / this.itemNum - 1) : e < 55 ? 360 / this.itemNum * 4 + this.getRandom(0, 360 / this.itemNum - 1) : e < 70 ? 360 / this.itemNum * 5 + this.getRandom(0, 360 / this.itemNum - 1) : e < 80 ? 360 / this.itemNum * 6 + this.getRandom(0, 360 / this.itemNum - 1) : 360 / this.itemNum * 7 + this.getRandom(0, 360 / this.itemNum - 1)
+  getEnd(rnd) {
+    if(rnd < 2) return this.getRandom(0, 360 / this.itemNum - 1)
+    else if (rnd < 17) return 360 / this.itemNum + this.getRandom(0, 360 / this.itemNum - 1)
+    else if(rnd < 27) return 360 / this.itemNum * 2 + this.getRandom(0, 360 / this.itemNum - 1)
+    else if(rnd < 47) return 360 / this.itemNum * 3 + this.getRandom(0, 360 / this.itemNum - 1)
+    else if(rnd < 55) return 360 / this.itemNum * 4 + this.getRandom(0, 360 / this.itemNum - 1)
+    else if(rnd < 70) return 360 / this.itemNum * 5 + this.getRandom(0, 360 / this.itemNum - 1)
+    else if(rnd < 80) return 360 / this.itemNum * 6 + this.getRandom(0, 360 / this.itemNum - 1) 
+    else return 360 / this.itemNum * 7 + this.getRandom(0, 360 / this.itemNum - 1)
   },
 
-  beginBtnEvent () {
+  beginBtnEvent() {
     this.reward()
     this.beginBtn.getComponent('cc.Button').interactable = false
   },
 
-  reward () {
-    const t = this.getRandom(0, 100)
-    const n = this.getEnd(t)
+  reward() {
+    const rnd = this.getRandom(0, 100)
+    const angle = this.getEnd(rnd)
 
     this.zhuanpan.runAction(cc.sequence(
       cc.rotateBy(2, 2160).easing(cc.easeQuarticActionIn()),
-      cc.rotateBy(3, n + 1080).easing(cc.easeQuarticActionOut()),
+      cc.rotateBy(3, angle + 1080).easing(cc.easeQuarticActionOut()),
       cc.callFunc(() => {
-        this.getReward(n)
+        this.getReward(angle)
         this.beginBtn.active = false
         this.rewardNum
         if (WorldController.currentLevel < 5) {
@@ -90,8 +102,8 @@ cc.Class({
     ))
   },
 
-  getReward (e) {
-    switch (Math.floor((360 - e) / (360 / this.itemNum))) {
+  getReward(angle) {
+    switch (Math.floor((360 - angle) / (360 / this.itemNum))) {
       case 0:
         LocalStorageData.updateGold(20)
         wx.showToast({
@@ -149,17 +161,23 @@ cc.Class({
         })
         break
       case 7:
-        isNaN(LocalStorageData.get('glass9'))
-          ? (LocalStorageData.set('glass9', 0), this.showLayer.active = true, this.showLayer.getComponent('tryItem').showItem = true, this.node.active = false)
-          : (LocalStorageData.updateGold(100), wx.showToast({
-              title: '金币+100',
-              icon: 'none',
-              duration: 2e3
-            }))
+        if(isNaN(LocalStorageData.get('glass9'))){
+          LocalStorageData.set('glass9', 0)
+          this.showLayer.active = true
+          this.showLayer.getComponent('tryItem').showItem = true
+          this.node.active = false
+        }else {
+          LocalStorageData.updateGold(100)
+          wx.showToast({
+            title: '金币+100',
+            icon: 'none',
+            duration: 2e3
+          })
+        }
     }
   },
 
-  tryBtn () {
+  tryBtn() {
     this.rewardType = 1
     this.tishi = 1
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
@@ -167,7 +185,7 @@ cc.Class({
     this.videoBtn.getComponent('cc.Button').interactable = false
   },
 
-  shareEvent () {
+  shareEvent() {
     this.rewardType = 1
     this.tishi = 2
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
@@ -176,7 +194,7 @@ cc.Class({
     this.shareBtn.getComponent('cc.Button').interactable = false
   },
 
-  close () {
+  close() {
     this.node.active = false
     cc.find('Canvas/complete').active = true
     cc.find('Canvas/complete').getComponent('complete').init()

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "f48e1e9f-e601-444c-a472-0558a3127733",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "水流到杯子拷贝3@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "d1769db1-9f12-4292-b124-38f91ca48a07",
+      "importer": "sprite-frame",
       "rawTextureUuid": "f48e1e9f-e601-444c-a472-0558a3127733",
       "trimType": "auto",
       "trimThreshold": 1,

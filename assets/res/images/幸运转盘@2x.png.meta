@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "16c30797-b61d-4363-a2d8-2f1642ad8efa",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "幸运转盘@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "214b8b08-95d8-49eb-a34c-6e8ea0d675a0",
+      "importer": "sprite-frame",
       "rawTextureUuid": "16c30797-b61d-4363-a2d8-2f1642ad8efa",
       "trimType": "auto",
       "trimThreshold": 1,

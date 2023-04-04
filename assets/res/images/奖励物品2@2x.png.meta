@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "83ce8f57-cb91-48c2-a067-0ddf32c5fdd0",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "奖励物品2@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "088bde09-2503-459f-a346-e6ce0c9b761c",
+      "importer": "sprite-frame",
       "rawTextureUuid": "83ce8f57-cb91-48c2-a067-0ddf32c5fdd0",
       "trimType": "auto",
       "trimThreshold": 1,

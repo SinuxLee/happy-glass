@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "2a137eb6-ed28-4f40-b691-d76bcff1dcd5",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "立即去玩@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "ed80b907-69b3-463d-9625-1027ed3e4018",
+      "importer": "sprite-frame",
       "rawTextureUuid": "2a137eb6-ed28-4f40-b691-d76bcff1dcd5",
       "trimType": "auto",
       "trimThreshold": 1,

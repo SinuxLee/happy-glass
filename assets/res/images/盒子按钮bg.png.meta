@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "47729bc0-fdd6-4eb5-87b8-edb8c00e5319",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "盒子按钮bg": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "2ca0b545-b5f8-4593-8cdf-ff8256c97501",
+      "importer": "sprite-frame",
       "rawTextureUuid": "47729bc0-fdd6-4eb5-87b8-edb8c00e5319",
       "trimType": "auto",
       "trimThreshold": 1,

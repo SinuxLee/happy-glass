@@ -21,11 +21,12 @@ cc.Class({
   },
 
   onLoad () {
-    if (isNaN(LocalStorageData.get('gold'))) {
+    const gold = LocalStorageData.get('gold')
+    if (gold == null) {
       this.goldLabel.string = 0
       LocalStorageData.set('gold', 0)
     } else {
-      this.goldLabel.string = LocalStorageData.get('gold')
+      this.goldLabel.string = gold
     }
 
     const level = WorldController.currentLevel + 1

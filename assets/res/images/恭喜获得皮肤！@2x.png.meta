@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "803ce640-0ac0-408a-b500-d16942693ea0",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "恭喜获得皮肤！@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a02f437c-ea55-49dc-b877-633a5a999ee3",
+      "importer": "sprite-frame",
       "rawTextureUuid": "803ce640-0ac0-408a-b500-d16942693ea0",
       "trimType": "auto",
       "trimThreshold": 1,

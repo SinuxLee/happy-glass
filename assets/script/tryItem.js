@@ -56,11 +56,11 @@ cc.Class({
     }
   },
 
-  onLoad () {
+  onLoad() {
     this.showItem = false
   },
 
-  onEnable () {
+  onEnable() {
     setTimeout(() => this.closeBtn.active = true, 2e3)
 
     this.glass = []
@@ -114,29 +114,26 @@ cc.Class({
       this.glassIcon.getComponent(cc.Sprite).spriteFrame = this.glass[0]
     }, 0.02)
 
-    let t = 0
     this.schedule(() => {
-      t == 3 && (t = 0)
-      this.glassIcon.getComponent(cc.Sprite).spriteFrame = this.glass[t]
-      t++
+      this.glassIcon.getComponent(cc.Sprite).spriteFrame = this.glass[0]
     }, 1)
 
     WorldController.tryItem = false
     WorldController.tryWater = false
   },
 
-  onRewardAdClose () {
-    const e = cc.find('Canvas/tryItem').getComponent('tryItem')
-    switch (e.rewardType) {
+  onRewardAdClose() {
+    const item = cc.find('Canvas/tryItem').getComponent('tryItem')
+    switch (item.rewardType) {
       case 1:
         WorldController.tryItem = true
-        WorldController.tryNum = e.tryNum
-        e.close()
+        WorldController.tryNum = item.tryNum
+        item.close()
         break
     }
   },
 
-  onRewardAdStop () {
+  onRewardAdStop() {
     cc.find('Canvas/tryItem').getComponent('tryItem').tishi == 1
       ? wx.showToast({
         title: '只有观看完整视频才能获得奖励哦',
@@ -150,33 +147,47 @@ cc.Class({
       })
   },
 
-  getGlassNum () {
-    for (var e = [], t = 0; t < 8; t++) isNaN(LocalStorageData.get('glass' + t)) && (this.tryType = 1, e.push(t))
-    return e.length > 0 ? e[Math.floor(Math.random(0, 0.99) * e.length)] : this.showItem ? void 0 : this.close()
+  getGlassNum() {
+    const arr = []
+    for (let i = 0; i < 8; i++) {
+      if (isNaN(LocalStorageData.get('glass' + i))) {
+        this.tryType = 1
+        arr.push(i)
+      }
+    }
+    if (arr.length > 0) {
+      return arr[Math.floor(Math.random(0, 0.99) * arr.length)]
+    } else if (this.showItem) return 0 ; else this.close()
   },
 
-  getWaterNum () {
-    for (let e = 0; e < 12; e++) {
-      if (isNaN(LocalStorageData.get('water' + e))) return this.tryType = 2, e
+  getWaterNum() {
+    for (let i = 0; i < 12; i++) {
+      if (isNaN(LocalStorageData.get('water' + i))) {
+        this.tryType = 2
+        return i
+      }
     }
     return this.getPenNum()
   },
 
-  getPenNum () {
-    for (let e = 0; e < 6; e++) {
-      if (isNaN(LocalStorageData.get('pen' + e))) return this.tryType = 3, e
+  getPenNum() {
+    for (let i = 0; i < 6; i++) {
+      if (isNaN(LocalStorageData.get('pen' + i))) {
+        this.tryType = 3
+        return i
+      }
     }
     return this.close()
   },
 
-  tryBtn () {
+  tryBtn() {
     this.rewardType = 1
     this.tishi = 1
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
     GameDataManager.setRewardStopClass(this.onRewardAdStop)
   },
 
-  shareBtn () {
+  shareBtn() {
     this.rewardType = 1
     this.tishi = 2
     GameDataManager.setRewardCloseClass(this.onRewardAdClose)
@@ -184,15 +195,15 @@ cc.Class({
     WorldController.share = true
   },
 
-  useEvent () {
+  useEvent() {
     LocalStorageData.set('glass9', 1)
-    const e = LocalStorageData.get('selectGlass')
-    LocalStorageData.set('glass' + e, 0)
+    const idx = LocalStorageData.get('selectGlass')
+    LocalStorageData.set('glass' + idx, 0)
     LocalStorageData.set('selectGlass', 9)
     this.close()
   },
 
-  close () {
+  close() {
     this.node.active = false
     cc.find('Canvas/complete').active = true
     cc.find('Canvas/complete').getComponent('complete').init()

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "6c0abb9e-ac2d-44d1-9979-ffebbc71d4f9",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "拖动进行画线将水引入水杯@2x": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "bd193efa-dcb0-40ad-b4e3-ce6935fcf0cb",
+      "importer": "sprite-frame",
       "rawTextureUuid": "6c0abb9e-ac2d-44d1-9979-ffebbc71d4f9",
       "trimType": "auto",
       "trimThreshold": 1,
